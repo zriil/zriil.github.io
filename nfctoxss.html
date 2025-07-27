@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Scanner</title></head>
+<body>
+  <h1>Scan Result:</h1>
+  <div id="output"></div>
+
+  <script>
+    // Simulasi pembacaan dari NFC
+    // Biasanya berasal dari NFC reader → server → ditampilkan ke UI
+    const dataFromNFC = decodeURIComponent("<script>alert('NFC')</script>");
+    document.getElementById("output").innerHTML = dataFromNFC;
+  </script>
+</body>
+</html>
