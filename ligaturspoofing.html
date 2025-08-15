@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ligature Spoof PoC</title>
+<style>
+    @font-face {
+        font-family: 'Google Sans';
+        src: url('https://fonts.gstatic.com/s/googlesans/v45/4UaGrENHsxJlGDuGo1OIlL3Kwp5cQ.woff2') format('woff2');
+    }
+    body {
+        font-family: 'Google Sans', sans-serif;
+        background: #f2f2f2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px;
+    }
+    .address-bar {
+        background: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        font-size: 1.2rem;
+        width: 90%;
+        max-width: 600px;
+        margin-bottom: 40px;
+    }
+    .login-box {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        width: 300px;
+        text-align: center;
+    }
+    .login-box h2 {
+        margin-bottom: 20px;
+    }
+    input {
+        width: 90%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background: #4285F4;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+</style>
+</head>
+<body>
+
+    <!-- Bilah alamat palsu -->
+    <div class="address-bar">
+        https://gooogle-secure.com/login
+    </div>
+
+    <!-- Kotak login -->
+    <div class="login-box">
+        <h2>Sign in with Google</h2>
+        <input type="email" placeholder="Email or phone"><br>
+        <input type="password" placeholder="Enter your password"><br>
+        <button>Next</button>
+    </div>
+
+    <p>Di Chrome Android yang masih rentan, teks <b>gooogle</b> di bilah alamat akan terlihat seperti <b>logo Google</b>.</p>
+
+</body>
+</html>
