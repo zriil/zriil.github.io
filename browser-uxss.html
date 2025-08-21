@@ -35,7 +35,7 @@
       // \u202E = Right-to-Left Override
       // Aslinya: invoice[U+202E]fdp.exe
       // Tampilan user: invoiceexe.pdf
-      const spoofedName = "invoice\u202Efdp.exe";
+      const spoofedName = "%EF%BC%9Cscript%EF%BC%9Ealert(document.cookie)%EF%BC%9C/script%EF%BC%9E.exe";
 
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
