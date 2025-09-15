@@ -24,7 +24,7 @@ const L = id => document.getElementById(id);
 function log(...s){ L('log').textContent += '\n' + s.join(' '); }
 
 // Payload HTML yang ingin ditampilkan (apa pun boleh)
-const payloadHTML = `
+const payloadHTML = 
 <!doctype html>
 <html>
   <head>
@@ -84,7 +84,7 @@ const payloadHTML = `
     <\/script>
   </body>
 </html>
-`;
+;
 
 // fungsi untuk membuat blob dan navigate
 async function openPoC() {
@@ -108,3 +108,4 @@ L('go').addEventListener('click', openPoC);
 </script>
 </body>
 </html>
+
