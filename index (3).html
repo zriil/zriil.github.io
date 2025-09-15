@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+    <head>
+    </head>
+    <body>
+        <script>
+            window.addEventListener("beforeunload", function onBeforeUnload (event) {
+                window.removeEventListener("beforeunload", onBeforeUnload);
+
+                setTimeout(() => {
+                    if (navigator.userActivation.isActive) {
+                        location.reload();
+                        document.open();
+                    }
+                }, 0);
+            });
+        </script>
+    </body>
+</html>
