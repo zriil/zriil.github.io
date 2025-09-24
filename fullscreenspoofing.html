@@ -1,55 +1,49 @@
-<button onclick="spoofFullscreen()">Clickme (Fullscreen Spoof)</button>
+<style>
+    select {
+        all: initial;
+
+
+    }
+
+    #front {
+        display: block;
+        top: 50vh;
+        left: 50vw;
+        position: fixed;
+
+    }
+
+    #spoofed {
+        display: none;
+        z-index: 1000;
+    }
+
+    * {
+        margin: 0;
+        overflow: hidden;
+
+    }
+</style>
+
+<div id="spoofed">
+    <img src="spoof.png" class="header" style="width: 100vw;height: 100vh;" />
+</div>
+<center id="front">
+    <select onmousedown="requestPermission()">
+        <option>Click to spoof</option>
+
+    </select>
+</center>
+
+
+
 
 <script>
-function spoofFullscreen() {
-  // 1. Buka jendela popup kosong
-  let win = window.open("", "", "width=800,height=600");
-
-  // 2. Konten palsu
-  let fakePage = `
-    <html>
-    <head>
-      <title>Google Sign-In</title>
-      <style>
-        body {
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background: white;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-        }
-        .login-box {
-          border: 1px solid #ccc;
-          padding: 40px;
-          box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input {
-          display: block;
-          margin: 10px 0;
-          padding: 10px;
-          width: 250px;
-        }
-        button {
-          padding: 10px 20px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="login-box">
-        <h2>Sign in to your Google Account</h2>
-        <input placeholder="Email or phone">
-        <input type="password" placeholder="Enter your password">
-        <button>Next</button>
-      </div>
-      <script>
+    function requestPermission() {
+        var front = document.getElementById("front");
+        var spoofed = document.getElementById("spoofed");
         document.documentElement.requestFullscreen();
-      </script>
-    </body>
-    </html>
-  win.document.write(fakePage);
-  win.document.close();
-}
+        spoofed.style.display = 'block';
+        front.style.opacity = "0";
+    }
 </script>
