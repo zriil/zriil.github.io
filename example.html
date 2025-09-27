@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popup Login iOS Friendly</title>
+  <style>
+    body {
+      background-color: #202124;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .logo {
+      font-size: 70px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .logo span:nth-child(1) { color: #4285F4; }
+    .logo span:nth-child(2) { color: #EA4335; }
+    .logo span:nth-child(3) { color: #FBBC05; }
+    .logo span:nth-child(4) { color: #4285F4; }
+    .logo span:nth-child(5) { color: #34A853; }
+    .logo span:nth-child(6) { color: #EA4335; }
+    .logo span:nth-child(7) { color: #ffffff; }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 50px;
+      padding: 10px 20px;
+      width: 500px;
+      max-width: 90%;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 16px;
+      padding: 8px;
+      background: transparent;
+      color: black;
+    }
+
+    /* ===== Popup Modal ===== */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.3s;
+    }
+
+    .modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: #fff;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 15px;
+    }
+
+    .modal-content input {
+      width: 90%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #4285F4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background: #3367d6;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span><span>!</span>
+  </div>
+  
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search Google or type a URL">
+    <button>🔍</button>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="popupModal">
+    <div class="modal-content">
+      <h2>Masukkan Kredensial</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="submitCreds()">Login</button>
+    </div>
+  </div>
+
+  <script>
+    // Tampilkan modal setelah 1 detik
+    window.onload = function() {
+      setTimeout(() => {
+        document.getElementById("popupModal").classList.add("active");
+        
+        // Untuk iOS: tunggu interaksi user pertama
+        document.body.addEventListener("touchstart", function handler() {
+          document.getElementById("password").focus();
+          document.body.removeEventListener("touchstart", handler);
+        });
+      }, 1000);
+    }
+
+    function submitCreds() {
+      let user = document.getElementById("username").value;
+      let pass = document.getElementById("password").value;
+      alert("Username: " + user + "\nPassword: " + pass);
+      document.getElementById("popupModal").classList.remove("active");
+    }
+  </script>
+</body>
+</html>
