@@ -1,0 +1,91 @@
+The code in the demo was tested in versions 39.0.2171 to 41.0.2272 of chrome in Windows 7 & 8.
+The code in the demo worked in versions 39.0.2171 to 41.0.2272 of chrome in windows 7 & 8.
+
+
+
+Demo details:
+____________
+
+-Put the folder in a web server.
+
+-Open http://..../attack.html
+
+-Click on "start attack"
+
+
+
+
+Concerning the attack:
+_____________________
+
+The attack described in the demo is a url spoofing attack. It targets any website (in the demo it targets youtube.com).
+Once a victim goes to the hacker's domain, the code will display the content of the hacker's domain but with a spoofed url (spoofed page).
+The spoofed page can run javascript, so it's ideal for phishing.
+
+to create the spoofed page, the attack.html creates a chain of pages in its tab, then at the end of the chain, tries almost simultaneously 
+to open an iframe who is trying to change it's parent's location to youtube.com (iframeattack.html) and changing it's location to another page (lastpage.html).
+
+If lastpage.html is reached, it triggers multiple window.history.back() very fast. this can create a spoofed page in the chain of pages created.
+
+Then we have to forward (window.history.forward()) till we get to the spoofed page. There is no way to know which one it is by reading the url from
+js (it will always display the original url). In the demo we chose randomly the position of the page to be displayed hoping it will be the spoofed page
+(the position depends on how fast the multiple backs are executed (fastbackstimeout). 
+Generally, the position is between position 3 and 6 (counting from the point where the code starts doing fwdxtimes()), in the demo i chose 4).
+
+The paragraph "Double Renderer and crash exploitation" describes a better technique to know more reliably the position of the spoofed page in the chain.
+
+
+
+
+Concerning the config variables of the demo:
+___________________________________________
+
+The config variable fastbackstimeout (in attack.html) must be tuned to have a better success rate for the attack. It depends on the url to spoof,
+the speed of the internet connection and the speed of the computer (at the time of the attack) of the victim.  
+
+It is hard coded in the demo, but we can use a javascript code to fill it. the js code can test the connection speed and computer performance, 
+and depending on the result, tune the fastbacktimout variable (the faster the connection and computer speed are, the smaller this variable should be).
+
+
+
+
+
+
+Double Renderer and crash exploitation:
+______________________________________
+
+To have a better exploitation reliability, we could use the following technique:
+
+
+Open from attack.html with window.open another page (let's call it 2.html) in another tab AND another renderer process (by doing .click() on an 
+anchor tag with the rel="noreferrer" attribute).
+
+2.html contains the same code as attack.html (the code creating a chain of pages containing a spoofed page).
+Since the 2 pages are almost identical, are opened and executed almost simultaneously, they have a high probability that the position of the spoofed page 
+in each chain will be the same.
+
+To know the position of the spoofed page of the tab 2, we execute the javasript function history.replaceState() on each page of the chain (we go 
+from one page to the next with history.forward()). 
+After each execution of history.replaceState(), 2.html will note in the cookies the position reached and then forward to the next page in the chain. 
+When history.replaceState()  is executed on the spoofed page, the tab will crash, and therefore the noted position in the cookies will
+remain constant.
+Tab1 (attack.html) will then read the position of the spoofed page of tab2 in the cookies (same domain as 2.html) and forward to it. 
+That way it can choose the spoofed page to display to the victim.
+
+
+NOTE: performing multiple times the spoofing code in one tab will create multiple spoofed pages but if one of them doesn't succeed (the url to be spoofed opens
+normally) the attack won't succeed. So we have a higher probability to succeed by performing the attack described above or even by choosing randomly the page 
+(from the chain of created pages) to be displayed.
+
+
+
+
+
+
+More attacks exploiting the same bug:
+____________________________________
+
+Other types of attacks exploiting the same bug exist. Contact me if you need more details.
+
+
+
