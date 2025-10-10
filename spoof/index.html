@@ -56,7 +56,7 @@ document.getElementById('openBtn').addEventListener('click', () => {
 
 document.getElementById('openAndWrite').addEventListener('click', () => {
   // alternatif kalau pop-up di-block: open + write segera (same-origin)
-  const win = window.open('/poctarget.html', '_blank');
+  const win = window.open('/spoof/poctarget.html', '_blank');
   if (!win) { log('Popup blocked'); return; }
   log('Opened & immediately attempting to write into target (same-origin)');
   // small delay to ensure document exists
