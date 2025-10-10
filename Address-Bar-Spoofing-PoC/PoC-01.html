@@ -7,9 +7,9 @@
             var spoof = function () {
                 document.write("<h1>This is not Bing</h1>");
                 document.location = "https://bing.com:8081";
-                function () {
+                setInterval(function () {
                     document.location = "https://bing.com:8080";
-                },
+                }, 100000000);
             };
         </script>
     </head>
