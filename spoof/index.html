@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PoC Spoofing — Launcher (Same-origin)</title>
+  <style>
+    body{font-family:system-ui,Roboto,Arial;margin:28px;background:#f3f6fb;color:#0f172a}
+    .card{background:#fff;padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,.06);max-width:820px}
+    button{background:#0ea5e9;color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer}
+    .muted{color:#6b7280;font-size:13px;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>PoC Spoofing — Launcher (Same-origin)</h2>
+    <p class="muted">Ini membuka halaman <code>/poctarget.html</code> (sama-origin) lalu menulis PoC visual. <strong>DEMO — NOT REAL</strong>.</p>
+
+    <div style="margin-top:12px">
+      <button id="openBtn">Open PoC (same-origin)</button>
+      <button id="openAndWrite" style="margin-left:8px">Open & Inject (auto-write)</button>
+    </div>
+
+    <div class="muted" style="margin-top:12px">
+      Catatan: jika pop-up diblokir, gunakan opsi kedua (Open & Inject) atau izinkan pop-up untuk localhost.
+    </div>
+
+    <div id="log" style="margin-top:12px;font-family:monospace;background:#0b1220;color:#e6f2ff;padding:10px;border-radius:8px;max-height:160px;overflow:auto">
+      Log: siap
+    </div>
+  </div>
+
+<script>
+const logEl = document.getElementById('log');
+function log(t){ logEl.innerHTML = new Date().toLocaleTimeString() + ' — ' + t + '<br/>' + logEl.innerHTML; }
+
+document.getElementById('openBtn').addEventListener('click', () => {
+  // Buka target same-origin (harus ada file poctarget.html di server)
+  const win = window.open('/poctarget.html', '_blank');
+  if (!win) { log('Popup blocked'); return; }
+  log('Opened /poctarget.html in a new window (waiting for load)...');
+
+  // Setelah load, kita bisa modify DOM karena same-origin
+  win.addEventListener('load', () => {
+    try {
+      log('Target loaded — injecting PoC markup (safe demo)');
+      win.document.getElementById('placeholder').innerHTML = buildPoC();
+      // optional: fokus ke elemen PoC
+      const btn = win.document.getElementById('pocCloseBtn');
+      if (btn) btn.onclick = () => { win.close(); log('Target window closed by PoC button'); };
+    } catch (e) {
+      log('Injection error: ' + e);
+    }
+  });
+});
+
+document.getElementById('openAndWrite').addEventListener('click', () => {
+  // alternatif kalau pop-up di-block: open + write segera (same-origin)
+  const win = window.open('/poctarget.html', '_blank');
+  if (!win) { log('Popup blocked'); return; }
+  log('Opened & immediately attempting to write into target (same-origin)');
+  // small delay to ensure document exists
+  setTimeout(() => {
+    try {
+      win.document.getElementById('placeholder').innerHTML = buildPoC();
+      log('Injected PoC markup (openAndWrite)');
+    } catch (e) {
+      log('Injection failed: ' + e);
+    }
+  }, 120);
+});
+
+// PoC markup builder (safe visual only)
+function buildPoC(){
+  return `
+    <div style="border-radius:10px;padding:12px;background:#fff;border:1px solid #e6eefc">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#10b981"></div>
+        <div style="flex:1;text-align:center;font-weight:800">DEMO ADDRESS BAR — NOT REAL</div>
+      </div>
+
+      <div style="margin-top:12px;color:#374151">
+        <p style="margin:0 0 10px 0"><strong>Visual Spoof Simulation</strong> — ini hanya tampilan yang meniru address bar dan dialog. Tidak ada data yang dikirim.</p>
+
+        <label style="font-size:13px;color:#6b7280">Simulated username</label>
+        <input id="simUser" placeholder="user@example.com" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc;margin-top:6px"></input>
+
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+          <button id="pocShow" style="background:#2563eb;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer">Tampilkan Demo</button>
+          <button id="pocCloseBtn" style="background:#ef4444;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer">Tutup</button>
+        </div>
+
+        <div id="pocNotice" style="margin-top:10px;font-size:13px;color:#6b7280">
+          <strong>DEMO — NOT REAL</strong>. Jangan gunakan untuk menipu orang nyata. Semua data tetap lokal dan tidak dikirim.
+        </div>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
