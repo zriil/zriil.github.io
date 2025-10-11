@@ -1,10 +1,49 @@
-<h2>Spoof 13</h2>
+<h2>Spoof 13 — Safe variant</h2>
 <script>
-function pocccc(){
-var w=open('data://google.com');
-w.document.body.innerHTML='This is not google';
+/**
+ * Whitelist minimal: hanya http(s) dan optional host whitelist.
+ * Jangan masukkan data:, javascript:, file:, atau custom schemes.
+ */
+const ALLOWED_PROTOCOLS = ['http:', 'https:'];
+// (Opsional) jika ingin batasi host tertentu:
+const ALLOWED_HOSTS = null; // e.g. ['example.com','bank.example.com'] or null to allow any host over https/http
+
+function isAllowedUrl(input) {
+  try {
+    // parse absolute or relative URLs reliably
+    const url = new URL(input, location.href);
+    if (!ALLOWED_PROTOCOLS.includes(url.protocol)) return false;
+    if (ALLOWED_HOSTS && !ALLOWED_HOSTS.includes(url.hostname)) return false;
+    return url; // return parsed URL object if allowed
+  } catch (e) {
+    return false;
+  }
+}
+
+function safeOpen(raw) {
+  const parsed = isAllowedUrl(raw);
+  if (!parsed) {
+    // Jangan buka URL berbahaya — buka about:blank dan tunjukkan pesan aman
+    const w = window.open('about:blank', '_blank', 'noopener,noreferrer');
+    if (!w) return alert('Popup blocked or unable to open window.');
+    w.document.write('<h2>Navigation blocked</h2><p>Target URL is not allowed.</p>');
+    w.document.close();
+    return;
+  }
+
+  // Jika aman: buka link dengan fitur noopener/noreferrer sehingga tidak dapat di-manipulasi dari jendela asal
+  // Gunakan URL yang sudah tervalidasi
+  const safeHref = parsed.href;
+  window.open(safeHref, '_blank', 'noopener,noreferrer');
+}
+
+// contoh pemakaian: jangan gunakan data://... lagi
+function pocccc() {
+  // contoh yang aman: validasi dulu
+  safeOpen('https://www.google.com/');
 }
 </script>
-<p class="test"><input class="btn btn-success btn-lg" type="button" value="Run test case"
-onclick="pocccc();" />
+
+<p class="test">
+  <input class="btn btn-success btn-lg" type="button" value="Run safe test case" onclick="pocccc();" />
 </p>
