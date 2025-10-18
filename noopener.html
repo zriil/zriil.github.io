@@ -1,0 +1,14 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Attacker — open fake google</title>
+<style>body{font-family:system-ui;padding:24px}</style>
+<h2>Attacker demo — Direct open</h2>
+<p>Will open <strong>https://test-google.local:8443</strong></p>
+<button id="open">Open fake-google (direct)</button>
+
+<script>
+document.getElementById('open').addEventListener('click', () => {
+  // Buka new tab langsung ke domain yang kamu kontrol
+  window.open('https://google.com', '_blank', 'noopener,noreferrer');
+});
+</script>
