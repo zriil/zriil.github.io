@@ -1,0 +1,11 @@
+<button id="open">Open safe demo</button>
+<script>
+document.getElementById('open').addEventListener('click', () => {
+  // membuka window baru yang controllable (same origin: about:blank)
+  const w = window.open("about:google.com", "_blank");
+  // tulis konten (ini tidak mengubah origin; URL tetap about:blank)
+  w.document.open();
+  w.document.write(`<style>body{font-family:system-ui;padding:40px}</style><h1>Controllable Blank Window</h1><p>This is a local test.</p>`);
+  w.document.close();
+});
+</script>
