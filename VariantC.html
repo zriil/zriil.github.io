@@ -15,7 +15,7 @@ function f() {
 
   // setelah beberapa waktu, navigasi ke test domain
   setTimeout(() => {
-    try { w.location.replace('https://test-target.local:8443/'); } catch(e) { console.warn(e); }
+    try { w.location.replace('https://google.com/'); } catch(e) { console.warn(e); }
     // revoke setelah tidak diperlukan
     URL.revokeObjectURL(url);
   }, 300);
