@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Click Me</title>
+</head>
+<body>
+  <a href="#" onclick="go(); return false;">Click Me</a>
+  <script>
+function go(){ 
+ var x=window.open('about:blank'); 
+ setTimeout(function(){
+ a=x.alert('Alert');x.prompt('Queued','');b=x.prompt('Password','');x.alert('Alert 2');} ,1000);
+  } 
+  </script>
+
+  <br><br><a href="firefox://open-text?text=about://">sec test</a>
+  <br><br><a href="firefox://open-text?text=https://mattreagandev.com">sec test website</a>
+  <br><br><a href="firefox://open-text?text=javascript:alert('Hello!')">sec test JS</a>
+</body>
+</html>
