@@ -10,4 +10,4 @@
 	CSP enforced with &lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;script-src &#39;none&#39;&quot;&gt;
 <script>alert('Javascript is executed.')</script>
 </body>
-</html>
+</html> 
