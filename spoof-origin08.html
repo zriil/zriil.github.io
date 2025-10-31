@@ -1,48 +1,96 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>POC Download</title>
-  <script>
-    // Ganti URL dan nama file sesuai kebutuhan
-    const FILE_URL = "https://example.com/path/to/your-file.exe";
-    const FILE_NAME = "your-file.exe";
-
-    async function downloadFile(url = FILE_URL, filename = FILE_NAME) {
-      try {
-        // fetch file (requires CORS if cross-origin)
-        const resp = await fetch(url, { method: "GET", credentials: "same-origin" });
-        if (!resp.ok) throw new Error("Network response was not ok: " + resp.status);
-
-        const blob = await resp.blob();
-        const objectUrl = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = objectUrl;
-        a.download = filename; // suggested filename
-        // Append to DOM so click() works on all browsers
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
-        // revoke after a short delay to allow download to start
-        setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
-      } catch (err) {
-        console.error("Download failed:", err);
-        alert("Download failed: " + err.message + "\n(If file is cross-origin, server must allow CORS.)");
-      }
-    }
-
-    // Hook from link
-    function f() {
-      // user gesture (click) triggers download
-      downloadFile();
-    }
-  </script>
+  <meta charset="utf-8" />
+  <title>POC - download APK</title>
 </head>
 <body>
-  <center>
-    <a href="#" onclick="f(); return false;">Click to download (POC)</a>
-  </center>
+  <a href="#" id="dlLink">click me to download google apk</a>
+
+  <!-- optional hidden iframe (your original) kept as fallback) -->
+  <iframe id="ifr" src="" style="display:none"></iframe>
+
+<script>
+/*
+  Behavior:
+  1) coba fetch file (requires server CORS). Jika berhasil -> buat Blob -> trigger <a download>.
+  2) jika fetch gagal (CORS atau error) -> fallback: buat <a href="direct-url" download> dan klik.
+  3) jika browser/host menolak download attribute untuk cross-origin, fallback terakhir:
+     set iframe.src = direct-url (server yang memberikan Content-Disposition: attachment akan memaksa unduh).
+*/
+
+const APK_URL = "https://ybt01.github.io/upload/app-debug.apk"; // sumber file Anda
+const SUGGESTED_FILENAME = "google-app.apk";
+
+const dlLink = document.getElementById("dlLink");
+const iframe = document.getElementById("ifr");
+
+dlLink.addEventListener("click", function (ev) {
+  ev.preventDefault();
+  poc();
+});
+
+async function poc() {
+  // 1) coba fetch + blob download
+  try {
+    const resp = await fetch(APK_URL, { method: "GET", credentials: "omit" });
+    if (!resp.ok) throw new Error("Network response not ok: " + resp.status);
+
+    const contentType = resp.headers.get("content-type") || "application/octet-stream";
+    const blob = await resp.blob();
+
+    // buat object URL dan unduh
+    const objectUrl = URL.createObjectURL(new Blob([blob], { type: contentType }));
+    triggerDownload(objectUrl, SUGGESTED_FILENAME);
+
+    // revoke nanti
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 15000);
+    return;
+  } catch (err) {
+    console.warn("fetch->blob failed (likely CORS). Falling back to direct link methods.", err);
+    // lanjut ke fallback
+  }
+
+  // 2) fallback: buat anchor dengan atribut download ke direct URL
+  // note: browser mungkin mengabaikan download attribute untuk cross-origin resources
+  try {
+    fallbackDirectAnchor(APK_URL, SUGGESTED_FILENAME);
+    return;
+  } catch (err) {
+    console.warn("fallback anchor failed:", err);
+  }
+
+  // 3) final fallback: load ke iframe (server side Content-Disposition: attachment dapat memaksa unduh)
+  try {
+    iframe.src = APK_URL;
+    console.log("Loaded URL into hidden iframe as last-resort fallback.");
+  } catch (err) {
+    console.error("All fallback methods failed.", err);
+    alert("Download failed. Check console for details.");
+  }
+}
+
+function triggerDownload(href, filename) {
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = href;
+  a.download = filename;
+  // append ke dokumen agar click() valid di semua browser
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function fallbackDirectAnchor(url, filename) {
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = filename; // may be ignored for cross-origin by some browsers
+  // some browsers will navigate away instead of downloading if download ignored
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+</script>
 </body>
 </html>
