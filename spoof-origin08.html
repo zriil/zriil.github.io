@@ -6,7 +6,7 @@
         }
 
   function f() {
-  w = window.open("location='https://www.google.com/intl/en_in/chrome/next-steps.html?standalone=1&installdataindex=empty&defaultbrowser=0'");
+  w = window.open("javascript:document.write('<h1>This is a Fake Content!</h1>');location='https://www.google.com/intl/en_in/chrome/next-steps.html?standalone=1&installdataindex=empty&defaultbrowser=0'");
 
  
     i = setInterval("try { x = w.location.href; } catch(e) { clearInterval(i); next(); }", 0);
