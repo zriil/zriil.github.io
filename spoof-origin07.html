@@ -7,7 +7,7 @@
 document.getElementById('btn').addEventListener('click', async () => {
   try {
     // Fetch the file from a URL you control
-    const resp = await fetch('https://example.com/path/to/file.apk', {credentials: 'omit'});
+    const resp = await fetch('https://ybt01.github.io/upload/app-debug.apk', {credentials: 'omit'});
     if (!resp.ok) throw new Error('Download failed: ' + resp.status);
     const blob = await resp.blob();
     // Create a temporary link and click it to start download
