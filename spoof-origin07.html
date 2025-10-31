@@ -1,0 +1,27 @@
+<!-- Direct download (simple) -->
+<a id="dl" href="https://ybt01.github.io/upload/app-debug.apk”>download>Download APK</a>
+
+<!-- Direct download (JS, programmatic, no new window) -->
+<button id="btn">Download file</button>
+<script>
+document.getElementById('btn').addEventListener('click', async () => {
+  try {
+    // Fetch the file from a URL you control
+    const resp = await fetch('https://example.com/path/to/file.apk', {credentials: 'omit'});
+    if (!resp.ok) throw new Error('Download failed: ' + resp.status);
+    const blob = await resp.blob();
+    // Create a temporary link and click it to start download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'app-debug.apk'; // suggested filename
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    alert('Download error: ' + err.message);
+  }
+});
+</script>
