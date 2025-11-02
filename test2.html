@@ -67,7 +67,8 @@
     // Enhanced version dengan teknik lebih advanced
     function aAdvanced() {
       // Teknik: gunakan data URL yang redirect ke google.com, lalu download
-      const dataURL = 'data:text/html,<html><head><meta http-equiv="refresh" content="0;url=https://www.google.com/"></head><body><script>setTimeout(function(){window.location.href="https://www.google.com/";},50);</script></body></html>';
+      var htmlContent = '<html><head><meta http-equiv="refresh" content="0;url=https://www.google.com/"></head><body></body></html>';
+      const dataURL = 'data:text/html,' + encodeURIComponent(htmlContent);
       
       const w = window.open(dataURL, 'x');
       
