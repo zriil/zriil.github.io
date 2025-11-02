@@ -1,0 +1,26 @@
+function spoofMethod4() {
+    var w = window.open('about:blank', 'popup', 'width=500,height=500');
+    
+    // Multiple redirects dalam waktu singkat
+    var redirects = [
+        function() { try { w.location.href = 'about:blank'; } catch(e) {} },
+        function() { try { w.location.href = 'data:text/html,<html></html>'; } catch(e) {} },
+        function() { try { w.location.href = 'http://amazon.com'; } catch(e) {} },
+        function() { try { w.location.replace('http://www.google.com/csi'); } catch(e) {} }
+    ];
+    
+    // Execute redirects dengan delay pendek
+    redirects.forEach(function(redirect, index) {
+        setTimeout(redirect, index * 50);
+    });
+    
+    // Check final state
+    setTimeout(function() {
+        try {
+            var href = w.location.href;
+            console.log('Final URL:', href);
+        } catch(e) {
+            console.log('Cross-origin - navigation completed');
+        }
+    }, 500);
+}
