@@ -1,0 +1,52 @@
+<script>
+function next() {
+    try {
+        w.location.replace('http://www.google.com/csi');
+    } catch(e) {
+        console.log('Navigation already completed');
+    }
+}
+
+function f() {
+    // Gunakan about:blank sebagai alternatif yang lebih reliable
+    var w = window.open('about:blank', 'new', 'width=500,height=500');
+    
+    if (!w) {
+        alert('Popup blocked! Please allow popups for this site.');
+        return;
+    }
+    
+    // Write content ke popup
+    setTimeout(function() {
+        try {
+            w.document.open();
+            w.document.write('<!DOCTYPE html><html><head><title>Loading...</title></head>');
+            w.document.write('<body><h1>Please wait...</h1>');
+            w.document.write('<script>');
+            w.document.write('setTimeout(function() { window.location = "http://amazon.com"; }, 300);');
+            w.document.write('<\/script></body></html>');
+            w.document.close();
+        } catch(e) {
+            console.error('Error writing to popup:', e);
+        }
+    }, 100);
+    
+    // Monitor navigation dengan interval yang lebih reasonable
+    var i = setInterval(function() {
+        try {
+            var href = w.location.href;
+            // Jika masih bisa dibaca dan bukan blank, navigasi mungkin sedang terjadi
+            if (href && href !== 'about:blank' && !href.startsWith('about:')) {
+                clearInterval(i);
+                setTimeout(next, 50);
+            }
+        } catch(e) {
+            // Cross-origin error berarti navigasi berhasil
+            clearInterval(i);
+            setTimeout(next, 100);
+        }
+    }, 50); // Interval lebih reasonable (50ms bukan 1ms)
+}
+</script>
+
+<a href="#" onclick="f(); return false;">Login with amazon</a>
