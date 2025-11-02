@@ -1,0 +1,24 @@
+function spoofMethod3() {
+    var iframe = document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.height = '500px';
+    iframe.style.border = 'none';
+    iframe.src = 'about:blank';
+    
+    document.body.appendChild(iframe);
+    
+    iframe.onload = function() {
+        try {
+            var doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write('<!DOCTYPE html><html><head><title>Amazon</title></head>');
+            doc.write('<body><h1>Please Login</h1>');
+            doc.write('<script>');
+            doc.write('setTimeout(function() { window.location = "http://amazon.com"; }, 300);');
+            doc.write('</script></body></html>');
+            doc.close();
+        } catch(e) {
+            console.error('Error:', e);
+        }
+    };
+}
