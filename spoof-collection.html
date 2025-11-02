@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Spoofing Techniques Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #007bff;
+            font-size: 14px;
+        }
+        .spoof-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #dee2e6;
+        }
+        .spoof-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .result {
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px solid #dee2e6;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .warning {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Browser Spoofing Techniques Collection</h1>
+        <p class="subtitle">Kumpulan Teknik Spoofing Browser untuk Penelitian Keamanan</p>
+        
+        <div class="info">
+            <strong>⚠️ Catatan:</strong> Teknik-teknik ini untuk tujuan penelitian keamanan dan edukasi. 
+            Penggunaan untuk tujuan jahat adalah ilegal. Hasil dapat bervariasi tergantung browser dan versinya.
+        </div>
+
+        <!-- 1. User Agent Spoofing -->
+        <div class="spoof-section">
+            <h3>1. User Agent Spoofing</h3>
+            <p>Menyamarkan User Agent browser untuk menyembunyikan informasi browser asli.</p>
+            <button onclick="spoofUserAgent()">Test User Agent Spoofing</button>
+            <button onclick="showRealUserAgent()">Show Real User Agent</button>
+            <div id="ua-result" class="result"></div>
+        </div>
+
+        <!-- 2. Geolocation Spoofing -->
+        <div class="spoof-section">
+            <h3>2. Geolocation Spoofing</h3>
+            <p>Menyamarkan lokasi geografis menggunakan Geolocation API.</p>
+            <button onclick="spoofGeolocation()">Test Geolocation Spoofing</button>
+            <button onclick="getRealLocation()">Get Real Location</button>
+            <div id="geo-result" class="result"></div>
+        </div>
+
+        <!-- 3. Timezone Spoofing -->
+        <div class="spoof-section">
+            <h3>3. Timezone Spoofing</h3>
+            <p>Menyamarkan timezone dan informasi waktu lokal.</p>
+            <button onclick="spoofTimezone()">Test Timezone Spoofing</button>
+            <div id="tz-result" class="result"></div>
+        </div>
+
+        <!-- 4. Screen Resolution Spoofing -->
+        <div class="spoof-section">
+            <h3>4. Screen Resolution & Display Spoofing</h3>
+            <p>Menyamarkan resolusi layar dan informasi display.</p>
+            <button onclick="spoofScreen()">Test Screen Spoofing</button>
+            <div id="screen-result" class="result"></div>
+        </div>
+
+        <!-- 5. Browser Fingerprinting Spoofing -->
+        <div class="spoof-section">
+            <h3>5. Browser Fingerprinting Spoofing</h3>
+            <p>Menyamarkan fingerprint browser untuk menghindari tracking.</p>
+            <button onclick="spoofFingerprint()">Test Fingerprint Spoofing</button>
+            <div id="fingerprint-result" class="result"></div>
+        </div>
+
+        <!-- 6. Canvas Fingerprinting Spoofing -->
+        <div class="spoof-section">
+            <h3>6. Canvas Fingerprinting Spoofing</h3>
+            <p>Mengacak canvas fingerprint untuk menghindari tracking.</p>
+            <button onclick="spoofCanvas()">Test Canvas Spoofing</button>
+            <div id="canvas-result" class="result"></div>
+        </div>
+
+        <!-- 7. WebRTC IP Leak Spoofing -->
+        <div class="spoof-section">
+            <h3>7. WebRTC IP Leak Spoofing</h3>
+            <p>Menyembunyikan IP lokal yang bocor melalui WebRTC.</p>
+            <button onclick="spoofWebRTC()">Test WebRTC IP Leak</button>
+            <div id="webrtc-result" class="result"></div>
+        </div>
+
+        <!-- 8. Battery API Spoofing -->
+        <div class="spoof-section">
+            <h3>8. Battery API Spoofing</h3>
+            <p>Menyamarkan informasi baterai device.</p>
+            <button onclick="spoofBattery()">Test Battery Spoofing</button>
+            <div id="battery-result" class="result"></div>
+        </div>
+
+        <!-- 9. Connection/Network Info Spoofing -->
+        <div class="spoof-section">
+            <h3>9. Network Connection Spoofing</h3>
+            <p>Menyamarkan informasi koneksi jaringan.</p>
+            <button onclick="spoofConnection()">Test Connection Spoofing</button>
+            <div id="connection-result" class="result"></div>
+        </div>
+
+        <!-- 10. Language/Locale Spoofing -->
+        <div class="spoof-section">
+            <h3>10. Language & Locale Spoofing</h3>
+            <p>Menyamarkan bahasa dan locale browser.</p>
+            <button onclick="spoofLanguage()">Test Language Spoofing</button>
+            <div id="language-result" class="result"></div>
+        </div>
+
+        <!-- 11. Clipboard Spoofing -->
+        <div class="spoof-section">
+            <h3>11. Clipboard Spoofing</h3>
+            <p>Memanipulasi konten clipboard.</p>
+            <button onclick="spoofClipboard()">Test Clipboard Spoofing</button>
+            <button onclick="copyFakeText()">Copy Fake Text</button>
+            <div id="clipboard-result" class="result"></div>
+        </div>
+
+        <!-- 12. Referer Spoofing -->
+        <div class="spoof-section">
+            <h3>12. Referer Spoofing</h3>
+            <p>Menyamarkan HTTP Referer header.</p>
+            <button onclick="spoofReferer()">Test Referer Spoofing</button>
+            <div id="referer-result" class="result"></div>
+        </div>
+
+        <!-- 13. Permissions API Spoofing -->
+        <div class="spoof-section">
+            <h3>13. Permissions API Spoofing</h3>
+            <p>Menyamarkan status permission browser.</p>
+            <button onclick="spoofPermissions()">Test Permissions Spoofing</button>
+            <div id="permissions-result" class="result"></div>
+        </div>
+
+        <!-- 14. Device Memory Spoofing -->
+        <div class="spoof-section">
+            <h3>14. Device Memory Spoofing</h3>
+            <p>Menyamarkan informasi memori device.</p>
+            <button onclick="spoofMemory()">Test Memory Spoofing</button>
+            <div id="memory-result" class="result"></div>
+        </div>
+
+        <!-- 15. Audio Context Fingerprinting Spoofing -->
+        <div class="spoof-section">
+            <h3>15. Audio Context Fingerprinting Spoofing</h3>
+            <p>Mengacak audio fingerprint untuk menghindari tracking.</p>
+            <button onclick="spoofAudio()">Test Audio Spoofing</button>
+            <div id="audio-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // 1. USER AGENT SPOOFING
+        // ============================================
+        var fakeUserAgents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0'
+        ];
+
+        function spoofUserAgent() {
+            var realUA = navigator.userAgent;
+            var fakeUA = fakeUserAgents[Math.floor(Math.random() * fakeUserAgents.length)];
+            
+            var result = document.getElementById('ua-result');
+            result.innerHTML = '<span class="success">✓ Real User Agent:</span>\n' + realUA + 
+                             '\n\n<span class="warning">⚠ Fake User Agent:</span>\n' + fakeUA +
+                             '\n\n<span class="error">Note:</span> JavaScript tidak bisa langsung mengubah navigator.userAgent.\n' +
+                             'Gunakan browser extension atau proxy untuk spoofing nyata.';
+        }
+
+        function showRealUserAgent() {
+            var result = document.getElementById('ua-result');
+            result.innerHTML = '<span class="success">Current User Agent:</span>\n' + navigator.userAgent +
+                             '\n\n<span class="success">Platform:</span>\n' + navigator.platform +
+                             '\n\n<span class="success">Vendor:</span>\n' + navigator.vendor +
+                             '\n\n<span class="success">App Name:</span>\n' + navigator.appName +
+                             '\n\n<span class="success">App Version:</span>\n' + navigator.appVersion;
+        }
+
+        // ============================================
+        // 2. GEOLOCATION SPOOFING
+        // ============================================
+        function spoofGeolocation() {
+            var result = document.getElementById('geo-result');
+            
+            // Fake coordinates (contoh: lokasi di Jakarta)
+            var fakeCoords = {
+                latitude: -6.2088,
+                longitude: 106.8456,
+                accuracy: 10
+            };
+
+            // Override geolocation API
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition = function(success, error) {
+                    success({
+                        coords: fakeCoords,
+                        timestamp: Date.now()
+                    });
+                };
+
+                result.innerHTML = '<span class="success">✓ Geolocation API Di-override</span>\n\n' +
+                                 '<span class="warning">Fake Location:</span>\n' +
+                                 'Latitude: ' + fakeCoords.latitude + '\n' +
+                                 'Longitude: ' + fakeCoords.longitude + '\n' +
+                                 'Accuracy: ' + fakeCoords.accuracy + 'm\n\n' +
+                                 '<span class="success">Test dengan:</span>\n' +
+                                 '<button onclick="testGeolocation()">Get Location</button>';
+            } else {
+                result.innerHTML = '<span class="error">Geolocation tidak didukung</span>';
+            }
+        }
+
+        function testGeolocation() {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var result = document.getElementById('geo-result');
+                result.innerHTML += '\n\n<span class="success">Location Retrieved:</span>\n' +
+                                 'Lat: ' + position.coords.latitude + '\n' +
+                                 'Lng: ' + position.coords.longitude;
+            });
+        }
+
+        function getRealLocation() {
+            var result = document.getElementById('geo-result');
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    result.innerHTML = '<span class="success">Real Location:</span>\n' +
+                                     'Latitude: ' + position.coords.latitude + '\n' +
+                                     'Longitude: ' + position.coords.longitude + '\n' +
+                                     'Accuracy: ' + position.coords.accuracy + 'm';
+                }, function(error) {
+                    result.innerHTML = '<span class="error">Error: ' + error.message + '</span>';
+                });
+            }
+        }
+
+        // ============================================
+        // 3. TIMEZONE SPOOFING
+        // ============================================
+        function spoofTimezone() {
+            var realTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            var fakeTimezones = [
+                'America/New_York',
+                'Europe/London',
+                'Asia/Tokyo',
+                'Australia/Sydney',
+                'America/Los_Angeles'
+            ];
+            var fakeTZ = fakeTimezones[Math.floor(Math.random() * fakeTimezones.length)];
+
+            var result = document.getElementById('tz-result');
+            result.innerHTML = '<span class="success">Real Timezone:</span>\n' + realTZ +
+                             '\n\n<span class="warning">Fake Timezone:</span>\n' + fakeTZ +
+                             '\n\n<span class="success">Real Timezone Offset:</span>\n' + 
+                             Intl.DateTimeFormat().resolvedOptions().timeZoneOffset +
+                             '\n\n<span class="success">Current Time (Real):</span>\n' +
+                             new Date().toString() +
+                             '\n\n<span class="error">Note:</span> JavaScript tidak bisa langsung mengubah timezone.\n' +
+                             'Gunakan browser extension atau sistem operasi untuk spoofing nyata.';
+        }
+
+        // ============================================
+        // 4. SCREEN RESOLUTION SPOOFING
+        // ============================================
+        function spoofScreen() {
+            var realInfo = {
+                width: screen.width,
+                height: screen.height,
+                availWidth: screen.availWidth,
+                availHeight: screen.availHeight,
+                colorDepth: screen.colorDepth,
+                pixelDepth: screen.pixelDepth
+            };
+
+            var fakeInfo = {
+                width: 1920,
+                height: 1080,
+                availWidth: 1920,
+                availHeight: 1040,
+                colorDepth: 24,
+                pixelDepth: 24
+            };
+
+            var result = document.getElementById('screen-result');
+            result.innerHTML = '<span class="success">Real Screen Info:</span>\n' +
+                             JSON.stringify(realInfo, null, 2) +
+                             '\n\n<span class="warning">Fake Screen Info:</span>\n' +
+                             JSON.stringify(fakeInfo, null, 2) +
+                             '\n\n<span class="error">Note:</span> JavaScript tidak bisa langsung mengubah screen properties.\n' +
+                             'Gunakan browser extension untuk spoofing nyata.';
+        }
+
+        // ============================================
+        // 5. BROWSER FINGERPRINTING SPOOFING
+        // ============================================
+        function spoofFingerprint() {
+            var realFingerprint = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                languages: navigator.languages,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                screen: {
+                    width: screen.width,
+                    height: screen.height,
+                    colorDepth: screen.colorDepth
+                },
+                plugins: Array.from(navigator.plugins).map(p => p.name),
+                hardwareConcurrency: navigator.hardwareConcurrency,
+                deviceMemory: navigator.deviceMemory || 'N/A'
+            };
+
+            var result = document.getElementById('fingerprint-result');
+            result.innerHTML = '<span class="success">Current Browser Fingerprint:</span>\n' +
+                             JSON.stringify(realFingerprint, null, 2) +
+                             '\n\n<span class="warning">Teknik Spoofing:</span>\n' +
+                             '1. Gunakan browser extension (uBlock Origin, Privacy Badger)\n' +
+                             '2. Override navigator properties dengan proxy\n' +
+                             '3. Gunakan browser dengan mode privacy/incognito\n' +
+                             '4. Randomisasi fingerprint menggunakan extension seperti Canvas Blocker';
+        }
+
+        // ============================================
+        // 6. CANVAS FINGERPRINTING SPOOFING
+        // ============================================
+        function spoofCanvas() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            
+            // Normal canvas fingerprint
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#f60';
+            ctx.fillRect(125, 1, 62, 20);
+            ctx.fillStyle = '#069';
+            ctx.fillText('Canvas fingerprint test', 2, 15);
+            ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+            ctx.fillText('Canvas fingerprint test', 4, 17);
+            
+            var realHash = canvas.toDataURL();
+            
+            // Fake canvas (dengan noise)
+            canvas = document.createElement('canvas');
+            ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#f60';
+            ctx.fillRect(125, 1, 62, 20);
+            
+            // Add noise untuk mengacak fingerprint
+            ctx.fillStyle = '#069';
+            ctx.fillText('Canvas fingerprint test', 2 + Math.random() * 0.1, 15 + Math.random() * 0.1);
+            ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+            ctx.fillText('Canvas fingerprint test', 4 + Math.random() * 0.1, 17 + Math.random() * 0.1);
+            
+            var fakeHash = canvas.toDataURL();
+
+            var result = document.getElementById('canvas-result');
+            result.innerHTML = '<span class="success">Real Canvas Fingerprint (first 100 chars):</span>\n' +
+                             realHash.substring(0, 100) + '...\n\n' +
+                             '<span class="warning">Spoofed Canvas (with noise):</span>\n' +
+                             fakeHash.substring(0, 100) + '...\n\n' +
+                             '<span class="success">Teknik:</span> Tambahkan noise minimal ke canvas untuk mengacak fingerprint.';
+        }
+
+        // ============================================
+        // 7. WEBRTC IP LEAK SPOOFING
+        // ============================================
+        function spoofWebRTC() {
+            var result = document.getElementById('webrtc-result');
+            
+            if (!window.RTCPeerConnection) {
+                result.innerHTML = '<span class="error">WebRTC tidak didukung</span>';
+                return;
+            }
+
+            var pc = new RTCPeerConnection({
+                iceServers: [{urls: "stun:stun.l.google.com:19302"}]
+            });
+
+            pc.createDataChannel("");
+            pc.createOffer()
+                .then(offer => pc.setLocalDescription(offer))
+                .catch(e => {
+                    result.innerHTML = '<span class="error">Error: ' + e.message + '</span>';
+                });
+
+            var localIPs = [];
+            pc.onicecandidate = function(event) {
+                if (event.candidate) {
+                    var candidate = event.candidate.candidate;
+                    var ipMatch = candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/);
+                    if (ipMatch) {
+                        var ip = ipMatch[1];
+                        if (localIPs.indexOf(ip) === -1) {
+                            localIPs.push(ip);
+                            result.innerHTML = '<span class="error">⚠ IP Leaked via WebRTC:</span>\n' +
+                                             localIPs.join('\n') +
+                                             '\n\n<span class="success">Cara Mencegah:</span>\n' +
+                                             '1. Gunakan extension seperti uBlock Origin\n' +
+                                             '2. Nonaktifkan WebRTC di browser settings\n' +
+                                             '3. Gunakan VPN\n' +
+                                             '4. Block STUN requests via firewall';
+                        }
+                    }
+                }
+            };
+
+            setTimeout(function() {
+                if (localIPs.length === 0) {
+                    result.innerHTML = '<span class="success">✓ Tidak ada IP yang terdeteksi</span>\n\n' +
+                                     'Browser mungkin sudah memblokir WebRTC atau menggunakan proxy/VPN.';
+                }
+            }, 3000);
+        }
+
+        // ============================================
+        // 8. BATTERY API SPOOFING
+        // ============================================
+        function spoofBattery() {
+            var result = document.getElementById('battery-result');
+            
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(function(battery) {
+                    var realInfo = {
+                        charging: battery.charging,
+                        chargingTime: battery.chargingTime,
+                        dischargingTime: battery.dischargingTime,
+                        level: battery.level
+                    };
+
+                    var fakeInfo = {
+                        charging: false,
+                        chargingTime: Infinity,
+                        dischargingTime: 7200,
+                        level: 0.85
+                    };
+
+                    result.innerHTML = '<span class="success">Real Battery Info:</span>\n' +
+                                     JSON.stringify(realInfo, null, 2) +
+                                     '\n\n<span class="warning">Fake Battery Info:</span>\n' +
+                                     JSON.stringify(fakeInfo, null, 2) +
+                                     '\n\n<span class="error">Note:</span> Untuk spoofing nyata, override navigator.getBattery() menggunakan browser extension.';
+                });
+            } else {
+                result.innerHTML = '<span class="error">Battery API tidak didukung</span>';
+            }
+        }
+
+        // ============================================
+        // 9. NETWORK CONNECTION SPOOFING
+        // ============================================
+        function spoofConnection() {
+            var result = document.getElementById('connection-result');
+            
+            if ('connection' in navigator || 'mozConnection' in navigator || 'webkitConnection' in navigator) {
+                var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                
+                var realInfo = {
+                    effectiveType: connection.effectiveType || 'N/A',
+                    downlink: connection.downlink || 'N/A',
+                    rtt: connection.rtt || 'N/A',
+                    saveData: connection.saveData || 'N/A'
+                };
+
+                var fakeInfo = {
+                    effectiveType: '4g',
+                    downlink: 10,
+                    rtt: 50,
+                    saveData: false
+                };
+
+                result.innerHTML = '<span class="success">Real Connection Info:</span>\n' +
+                                 JSON.stringify(realInfo, null, 2) +
+                                 '\n\n<span class="warning">Fake Connection Info:</span>\n' +
+                                 JSON.stringify(fakeInfo, null, 2) +
+                                 '\n\n<span class="error">Note:</span> Untuk spoofing nyata, override connection properties menggunakan browser extension.';
+            } else {
+                result.innerHTML = '<span class="error">Network Information API tidak didukung</span>';
+            }
+        }
+
+        // ============================================
+        // 10. LANGUAGE & LOCALE SPOOFING
+        // ============================================
+        function spoofLanguage() {
+            var realLang = {
+                language: navigator.language,
+                languages: navigator.languages,
+                locale: Intl.DateTimeFormat().resolvedOptions().locale
+            };
+
+            var fakeLang = {
+                language: 'en-US',
+                languages: ['en-US', 'en'],
+                locale: 'en-US'
+            };
+
+            var result = document.getElementById('language-result');
+            result.innerHTML = '<span class="success">Real Language Info:</span>\n' +
+                             JSON.stringify(realLang, null, 2) +
+                             '\n\n<span class="warning">Fake Language Info:</span>\n' +
+                             JSON.stringify(fakeLang, null, 2) +
+                             '\n\n<span class="error">Note:</span> JavaScript tidak bisa langsung mengubah navigator.language.\n' +
+                             'Gunakan browser extension atau ubah bahasa di browser settings.';
+        }
+
+        // ============================================
+        // 11. CLIPBOARD SPOOFING
+        // ============================================
+        function spoofClipboard() {
+            var result = document.getElementById('clipboard-result');
+            result.innerHTML = '<span class="success">Clipboard Spoofing Techniques:</span>\n\n' +
+                             '1. Copy text otomatis saat halaman load\n' +
+                             '2. Override clipboard content dengan konten palsu\n' +
+                             '3. Intercept paste events\n\n' +
+                             '<span class="warning">Test:</span> Klik tombol "Copy Fake Text" untuk menguji.';
+        }
+
+        function copyFakeText() {
+            var fakeText = 'https://legitimate-site.com/password-reset?token=fake-token-12345';
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fakeText).then(function() {
+                    var result = document.getElementById('clipboard-result');
+                    result.innerHTML = '<span class="success">✓ Fake text copied to clipboard:</span>\n' +
+                                     fakeText + '\n\n' +
+                                     '<span class="warning">Danger:</span> Website jahat bisa copy URL/credential palsu ke clipboard saat user copy text asli.';
+                });
+            } else {
+                // Fallback method
+                var textarea = document.createElement('textarea');
+                textarea.value = fakeText;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                var result = document.getElementById('clipboard-result');
+                result.innerHTML = '<span class="success">✓ Fake text copied to clipboard (fallback method):</span>\n' +
+                                 fakeText;
+            }
+        }
+
+        // ============================================
+        // 12. REFERER SPOOFING
+        // ============================================
+        function spoofReferer() {
+            var result = document.getElementById('referer-result');
+            
+            var realReferer = document.referrer || 'No referer';
+            var fakeReferer = 'https://www.google.com/search?q=legitimate+site';
+
+            result.innerHTML = '<span class="success">Real Referer:</span>\n' +
+                             realReferer +
+                             '\n\n<span class="warning">Fake Referer:</span>\n' +
+                             fakeReferer +
+                             '\n\n<span class="success">Teknik Spoofing:</span>\n' +
+                             '1. Menggunakan meta refresh dengan referrerpolicy="no-referrer"\n' +
+                             '2. Menggunakan &lt;iframe referrerpolicy="no-referrer"&gt;\n' +
+                             '3. Menggunakan rel="noreferrer" pada links\n' +
+                             '4. Menggunakan Referrer-Policy header\n\n' +
+                             '<span class="success">Test Link:</span>\n' +
+                             '<a href="https://httpbin.org/headers" target="_blank" rel="noreferrer">Open with no-referrer</a>';
+        }
+
+        // ============================================
+        // 13. PERMISSIONS API SPOOFING
+        // ============================================
+        function spoofPermissions() {
+            var result = document.getElementById('permissions-result');
+            
+            if ('permissions' in navigator) {
+                var permissions = ['geolocation', 'notifications', 'camera', 'microphone'];
+                
+                var checkPromises = permissions.map(function(permission) {
+                    return navigator.permissions.query({name: permission}).then(function(status) {
+                        return {permission: permission, state: status.state};
+                    }).catch(function(e) {
+                        return {permission: permission, state: 'error: ' + e.message};
+                    });
+                });
+
+                Promise.all(checkPromises).then(function(results) {
+                    result.innerHTML = '<span class="success">Current Permission States:</span>\n' +
+                                     JSON.stringify(results, null, 2) +
+                                     '\n\n<span class="error">Note:</span> JavaScript tidak bisa langsung mengubah permission states.\n' +
+                                     'User harus memberikan/revoke permissions melalui browser UI.';
+                });
+            } else {
+                result.innerHTML = '<span class="error">Permissions API tidak didukung</span>';
+            }
+        }
+
+        // ============================================
+        // 14. DEVICE MEMORY SPOOFING
+        // ============================================
+        function spoofMemory() {
+            var result = document.getElementById('memory-result');
+            
+            var realMemory = navigator.deviceMemory || 'N/A';
+            var fakeMemory = 8; // Fake 8GB
+
+            var info = {
+                realDeviceMemory: realMemory + ' GB',
+                fakeDeviceMemory: fakeMemory + ' GB',
+                hardwareConcurrency: navigator.hardwareConcurrency || 'N/A',
+                platform: navigator.platform,
+                maxTouchPoints: navigator.maxTouchPoints || 'N/A'
+            };
+
+            result.innerHTML = '<span class="success">Device Memory Info:</span>\n' +
+                             JSON.stringify(info, null, 2) +
+                             '\n\n<span class="error">Note:</span> JavaScript tidak bisa langsung mengubah navigator.deviceMemory.\n' +
+                             'Gunakan browser extension atau tamper dengan browser executable (tidak disarankan).';
+        }
+
+        // ============================================
+        // 15. AUDIO CONTEXT FINGERPRINTING SPOOFING
+        // ============================================
+        function spoofAudio() {
+            var result = document.getElementById('audio-result');
+            
+            try {
+                var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                var oscillator = audioContext.createOscillator();
+                var analyser = audioContext.createAnalyser();
+                var gainNode = audioContext.createGain();
+                var scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+
+                oscillator.type = 'triangle';
+                oscillator.connect(analyser);
+                analyser.connect(scriptProcessor);
+                scriptProcessor.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                scriptProcessor.onaudioprocess = function(bins) {
+                    var output = bins.inputBuffer.getChannelData(0);
+                    var hash = 0;
+                    for (var i = 0; i < output.length; i++) {
+                        hash += Math.abs(output[i]);
+                    }
+                    
+                    oscillator.stop();
+                    audioContext.close();
+                    
+                    result.innerHTML = '<span class="success">Audio Fingerprint Calculated:</span>\n' +
+                                     'Hash: ' + hash.toString().substring(0, 20) + '...\n\n' +
+                                     '<span class="warning">Teknik Spoofing:</span>\n' +
+                                     '1. Tambahkan noise kecil ke audio processing\n' +
+                                     '2. Gunakan browser extension seperti AudioContext Fingerprint Defender\n' +
+                                     '3. Randomisasi output audio context\n\n' +
+                                     '<span class="error">Note:</span> Audio fingerprinting sulit untuk di-spoof sempurna karena\n' +
+                                     'tergantung pada hardware audio device.';
+                };
+
+                oscillator.start(0);
+            } catch(e) {
+                result.innerHTML = '<span class="error">Error: ' + e.message + '</span>\n\n' +
+                                 'Audio Context tidak didukung atau diblokir.';
+            }
+        }
+    </script>
+</body>
+</html>
