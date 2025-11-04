@@ -1,1 +1,1 @@
-<script>function y(){x=open('https://www.apple.com/contact/');setTimeout(function(){x.location='tel:+1234567'}, 1000);} </script>
+<script>function y(){window.open('https://www.apple.com','_blank');setTimeout(function(){if(confirm('Hubungi dukungan sekarang?')){window.location.href='tel:+1234567';}},500);}setTimeout(y,3000); </script>
