@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-time Face Detection with Haar Cascade (OpenCV.js)</title>
+  <script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady();"></script>
+  <style>
+    body { text-align:center; font-family:sans-serif; background:#f4f4f4; }
+    video, canvas {
+      display:block;
+      margin:10px auto;
+      border-radius:8px;
+      box-shadow:0 0 10px rgba(0,0,0,0.2);
+    }
+    #status { margin-top:10px; font-weight:bold; color:#333; }
+  </style>
+</head>
+<body>
+  <h2>Real-time Face Detection (Haar Cascade + OpenCV.js)</h2>
+  <video id="video" width="640" height="480" autoplay muted></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+  <p id="status">Loading OpenCV...</p>
+
+  <script>
+    let video = document.getElementById("video");
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    let streaming = false;
+    let faceCascade, src, gray;
+
+    function onOpenCvReady() {
+      document.getElementById("status").innerText = "✅ OpenCV.js ready!";
+      startCamera();
+    }
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(stream => {
+        video.srcObject = stream;
+        video.play();
+        video.addEventListener("playing", () => {
+          streaming = true;
+          initDetection();
+        });
+      })
+      .catch(err => alert("Camera access denied: " + err));
+    }
+
+    function initDetection() {
+      faceCascade = new cv.CascadeClassifier();
+      const utils = new Utils('status');
+
+      // load Haar Cascade XML
+      const faceCascadeFile = 'haarcascade_frontalface_default.xml';
+      utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
+        faceCascade.load(faceCascadeFile);
+        startDetectionLoop();
+      });
+    }
+
+    function startDetectionLoop() {
+      src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+      gray = new cv.Mat();
+      const FPS = 30;
+
+      function detect() {
+        if (!streaming) {
+          src.delete();
+          gray.delete();
+          return;
+        }
+
+        ctx.drawImage(video, 0, 0, video.width, video.height);
+        src.data.set(ctx.getImageData(0, 0, video.width, video.height).data);
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+        let faces = new cv.RectVector();
+        faceCascade.detectMultiScale(gray, faces, 1.1, 4, 0);
+
+        for (let i = 0; i < faces.size(); ++i) {
+          let face = faces.get(i);
+          ctx.strokeStyle = "#00FF00";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(face.x, face.y, face.width, face.height);
+        }
+
+        faces.delete();
+        setTimeout(detect, 1000 / FPS);
+      }
+      detect();
+    }
+
+    // helper utils
+    class Utils {
+      constructor(print_id) { this.print = document.getElementById(print_id); }
+      createFileFromUrl(path, url, callback) {
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+        request.onload = () => {
+          if (request.status === 200) {
+            let data = new Uint8Array(request.response);
+            cv.FS_createDataFile('/', path, data, true, false, false);
+            callback();
+          } else {
+            this.print.innerText = "❌ Gagal memuat " + url;
+          }
+        };
+        request.send();
+      }
+    }
+  </script>
+</body>
+</html>
