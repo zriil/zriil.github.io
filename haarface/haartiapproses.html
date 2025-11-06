@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Haar Cascade + Visualisasi Preprocessing</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; text-align: center; }
+    video, canvas { border: 1px solid #ccc; border-radius: 8px; margin: 5px; }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Haar Cascade Face Detection + Preprocessing Visualization</h2>
+  <video id="videoInput" width="320" height="240" autoplay muted></video>
+  <canvas id="canvasOutput" width="320" height="240"></canvas>
+
+  <h3>Tahapan Preprocessing</h3>
+  <div class="grid">
+    <div>
+      <p>1️⃣ Crop</p>
+      <canvas id="cropCanvas" width="100" height="100"></canvas>
+    </div>
+    <div>
+      <p>2️⃣ Grayscale</p>
+      <canvas id="grayCanvas" width="100" height="100"></canvas>
+    </div>
+    <div>
+      <p>3️⃣ Blur</p>
+      <canvas id="blurCanvas" width="100" height="100"></canvas>
+    </div>
+    <div>
+      <p>4️⃣ Edge</p>
+      <canvas id="edgeCanvas" width="100" height="100"></canvas>
+    </div>
+    <div>
+      <p>5️⃣ LBP</p>
+      <canvas id="lbpCanvas" width="100" height="100"></canvas>
+    </div>
+  </div>
+
+  <!-- OpenCV.js -->
+  <script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+
+  <script>
+    async function onOpenCvReady() {
+      console.log("✅ OpenCV.js siap digunakan");
+      const video = document.getElementById("videoInput");
+      const canvas = document.getElementById("canvasOutput");
+      const ctx = canvas.getContext("2d");
+
+      // Aktifkan kamera
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      await video.play();
+
+      // Load Haar Cascade
+      const faceCascade = new cv.CascadeClassifier();
+      const response = await fetch("https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml");
+      const data = await response.arrayBuffer();
+      const dataView = new Uint8Array(data);
+      const cascadeFile = "haarcascade_frontalface_default.xml";
+      cv.FS_createDataFile("/", cascadeFile, dataView, true, false, false);
+      faceCascade.load(cascadeFile);
+      console.log("📂 Haarcascade loaded");
+
+      // Variabel OpenCV
+      let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+      let gray = new cv.Mat();
+      let faces = new cv.RectVector();
+      let cap = new cv.VideoCapture(video);
+
+      function processVideo() {
+        cap.read(src);
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+        // Deteksi wajah
+        faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0);
+
+        ctx.drawImage(video, 0, 0, video.width, video.height);
+        if (faces.size() > 0) {
+          let face = faces.get(0);
+          ctx.strokeStyle = "red";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(face.x, face.y, face.width, face.height);
+
+          // Crop wajah
+          let faceROI = gray.roi(face);
+
+          // 1️⃣ Crop
+          cv.imshow("cropCanvas", faceROI);
+
+          // 2️⃣ Grayscale (sudah gray)
+          cv.imshow("grayCanvas", faceROI);
+
+          // 3️⃣ Gaussian Blur
+          let blur = new cv.Mat();
+          cv.GaussianBlur(faceROI, blur, new cv.Size(5, 5), 0);
+          cv.imshow("blurCanvas", blur);
+
+          // 4️⃣ Edge Detection (Canny)
+          let edges = new cv.Mat();
+          cv.Canny(blur, edges, 80, 150);
+          cv.imshow("edgeCanvas", edges);
+
+          // 5️⃣ LBP (Local Binary Pattern sederhana)
+          let lbp = new cv.Mat.zeros(faceROI.rows, faceROI.cols, cv.CV_8UC1);
+          for (let i = 1; i < faceROI.rows - 1; i++) {
+            for (let j = 1; j < faceROI.cols - 1; j++) {
+              let center = faceROI.ucharPtr(i, j)[0];
+              let code = 0;
+              code |= (faceROI.ucharPtr(i - 1, j - 1)[0] > center) << 7;
+              code |= (faceROI.ucharPtr(i - 1, j)[0] > center) << 6;
+              code |= (faceROI.ucharPtr(i - 1, j + 1)[0] > center) << 5;
+              code |= (faceROI.ucharPtr(i, j + 1)[0] > center) << 4;
+              code |= (faceROI.ucharPtr(i + 1, j + 1)[0] > center) << 3;
+              code |= (faceROI.ucharPtr(i + 1, j)[0] > center) << 2;
+              code |= (faceROI.ucharPtr(i + 1, j - 1)[0] > center) << 1;
+              code |= (faceROI.ucharPtr(i, j - 1)[0] > center) << 0;
+              lbp.ucharPtr(i, j)[0] = code;
+            }
+          }
+          cv.imshow("lbpCanvas", lbp);
+
+          // Bersihkan
+          faceROI.delete(); blur.delete(); edges.delete(); lbp.delete();
+        }
+        requestAnimationFrame(processVideo);
+      }
+      requestAnimationFrame(processVideo);
+    }
+  </script>
+</body>
+</html>

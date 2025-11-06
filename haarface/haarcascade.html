@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Haar Cascade Face Detection (OpenCV.js)</title>
+  <script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady();"></script>
+  <style>
+    video, canvas { display: block; margin: 10px auto; }
+    #status { text-align: center; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center;">Real-time Face Detection with Haar Cascade (OpenCV.js)</h2>
+  <video id="cam_input" width="640" height="480" autoplay></video>
+  <canvas id="output" width="640" height="480"></canvas>
+  <div id="status">Loading OpenCV.js...</div>
+
+  <script>
+    let video = document.getElementById("cam_input");
+    let canvas = document.getElementById("output");
+    let ctx = canvas.getContext("2d");
+    let streaming = false;
+
+    function onOpenCvReady() {
+      document.getElementById("status").innerHTML = "OpenCV.js is ready!";
+      startCamera();
+    }
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(function(stream) {
+        video.srcObject = stream;
+        video.play();
+        streaming = true;
+        detectFace();
+      })
+      .catch(function(err) {
+        console.log("Error: " + err);
+      });
+    }
+
+    function detectFace() {
+      const faceCascadeFile = 'haarcascade_frontalface_default.xml';
+      let faceCascade = new cv.CascadeClassifier();
+
+      // Load Haar Cascade file
+      let utils = new Utils('status');
+      utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
+        faceCascade.load(faceCascadeFile);
+        processVideo(faceCascade);
+      });
+    }
+
+    function processVideo(faceCascade) {
+      let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+      let gray = new cv.Mat();
+      const FPS = 30;
+
+      function run() {
+        if (!streaming) return;
+        ctx.drawImage(video, 0, 0, video.width, video.height);
+        src.data.set(ctx.getImageData(0, 0, video.width, video.height).data);
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+        let faces = new cv.RectVector();
+        faceCascade.detectMultiScale(gray, faces, 1.1, 4, 0);
+
+        for (let i = 0; i < faces.size(); ++i) {
+          let face = faces.get(i);
+          ctx.strokeStyle = 'blue';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(face.x, face.y, face.width, face.height);
+        }
+
+        setTimeout(run, 1000 / FPS);
+      }
+      run();
+    }
+
+    // Util untuk memuat file XML (dibutuhkan oleh OpenCV.js)
+    class Utils {
+      constructor(print_fn_id) { this.print_fn = document.getElementById(print_fn_id); }
+      createFileFromUrl(path, url, callback) {
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+        request.onload = () => {
+          if (request.status === 200) {
+            let data = new Uint8Array(request.response);
+            cv.FS_createDataFile('/', path, data, true, false, false);
+            callback();
+          } else {
+            this.print_fn.innerHTML = 'Failed to load ' + url;
+          }
+        };
+        request.send();
+      }
+    }
+  </script>
+</body>
+</html>
