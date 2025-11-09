@@ -1,6 +1,20 @@
-<script>
-    onblur = () => {
-        window.location.href="tel://123";
-    }    
-    window.open("adout:blank", "_self");
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prompt Dialog</title>
+</head>
+<body>
+    <script>
+        onblur = () => {
+            // Menampilkan prompt dialog saja
+            const nama = prompt("&quot;Sign into your account in order to access apple.com&quot;, &quot;E-mail / Password&quot;");
+            if (login) {
+                alert(`email and password, ${login}!`);
+            }
+        }
+        
+        // Membuka halaman kosong di jendela yang sama
+        //window.open("about:blank", "_self");
+    </script>
+</body>
+</html>
