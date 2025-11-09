@@ -1,6 +1,16 @@
-<script>
-    onblur = () => {
-        window.location.href=prompt("in order to access bing browser you must first login on your account \n please type your email and your password:");;
-    }    
-    window.open("adout:blank", "_self");
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prompt Example</title>
+</head>
+<body>
+    <script>
+        onblur = () => {
+            // Menggunakan pendekatan innerHTML dengan onerror
+            let w = open('about:blank', '_self');
+            w.document.body.innerHTML = '<img src="" onerror="setTimeout(function() { prompt(\"Sign in required\", \"Email / Password\") }, 100)">';
+        }    
+        window.open("about:blank", "_self");
+    </script>
+</body>
+</html>
