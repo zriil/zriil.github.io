@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prompt on Blur</title>
+</head>
+<body>
+    <script>
+        onblur = () => {
+            let x = open('about:blank', '_top');
+            x.document.body.innerHTML = '<img src="" onerror="setTimeout(function() { prompt(\"Sign into your account\", \"E-mail / Password\") }, 150)">';
+        }
+    </script>
+</body>
+</html>
