@@ -1,31 +1,67 @@
 <html>
 <body>
 
-<button onclick="p()">click</button>
+
+
+
+<div style="margin-top:30%;margin-left:20%"><button onclick="g();">Double Tap here...</button></div>
+
 
 </body>
-</html>
 
 <script>
-function p()
-{
-  setTimeout(v,1);
-  document.body.requestFullscreen();
-}
+var i=0;
 
-function v()
+function g()
 {
 
-       navigator.mediaDevices ?
-        navigator.mediaDevices.getUserMedia(
-          {audio: true}).then(
-            
-        ) :
-        navigator.getUserMedia(
-          {audio: true},
-        
-        );
+  if(i==0)
+  {
+     document.body.requestFullscreen();
+	 i++;
+  }
+  if(i>0)
+  {
+  /*  if (navigator.share) {  
+   navigator.share({
+      title: 'WebShare API Demo',
+      url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+    }).then(() => {
+      console.log('Thanks for sharing!');
+    })
+    .catch(console.error); 
+   }*/
+
+  // if (navigator.share) { 
+  // document.body.requestFullscreen();
+   navigator.share({
+      title: 'WebShare API Demo',
+      url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+    }).then(() => {
+      console.log('Thanks for sharing!');
+    })
+    .catch(console.error);
+  //  } else {
+       // shareDialog.classList.add('is-open');
+   // }
+  
+ }
+	
+
+
+
+
 
 }
+
 
 </script>
+
+
+
+
+
+
+
+
+</html>
