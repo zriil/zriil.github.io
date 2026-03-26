@@ -1,4 +1,11 @@
 <script>
-open("");
-setInterval('location.reload()',1);
+  function y() {
+    x = open('https://www.google.com', '_top'),
+    x.document.title = '', 
+    x.document.body.innerHTML = 
+      '<img/src=\"\"onerror=\"alert(&quot;this is from google&quot;)\">' +
+      '<img/src=\"\"onerror=\"alert(&quot;this is from google&quot;)\">' +
+      '<img/src=\"\"onerror=\"alert(&quot;this is from google&quot;)\">'
+   };
+   setTimeout(y, 10);
 </script>
